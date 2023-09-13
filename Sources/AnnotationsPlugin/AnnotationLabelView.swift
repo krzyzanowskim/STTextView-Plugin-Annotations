@@ -5,7 +5,7 @@ import AppKit
 import SwiftUI
 
 /// Covenience annotation view implementation provided by the framework.
-open class STAnnotationLabelView: NSView {
+open class AnnotationLabelView: NSView {
 
     private struct ContentView<Label: View>: View {
         @Environment(\.isEnabled) private var isEnabled
@@ -48,9 +48,9 @@ open class STAnnotationLabelView: NSView {
         }
     }
 
-    public let annotation: STLineAnnotation
+    public let annotation: any LineAnnotation
 
-    public init<Label: View>(annotation: STLineAnnotation, label: Label) {
+    public init<Label: View>(annotation: any LineAnnotation, label: Label) {
         self.annotation = annotation
 
         super.init(frame: .zero)

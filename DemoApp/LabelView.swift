@@ -6,10 +6,10 @@ import Foundation
 import STTextView
 import AnnotationsPlugin
 
-struct AnnotationLabelView: View {
+struct LabelView<T: LineAnnotation>: View {
     let message: AttributedString
-    let action: (STLineAnnotation) -> Void
-    let lineAnnotation: STLineAnnotation
+    let action: (T) -> Void
+    let lineAnnotation: T
 
     var body: some View {
         Label {

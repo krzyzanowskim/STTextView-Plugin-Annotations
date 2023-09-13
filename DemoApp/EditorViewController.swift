@@ -3,13 +3,13 @@ import STTextView
 
 import AnnotationsPlugin
 
-class EditorViewController: NSViewController {
+final class EditorViewController: NSViewController {
 
-    private var annotationsPlugin = AnnotationsPlugin()
+    private var annotationsPlugin: AnnotationsPlugin!
     private var textView: STTextView!
     private var annotations: [MessageLineAnnotation] = [] {
         didSet {
-            // TODO: reload annotations
+            annotationsPlugin.reloadAnnotations()
         }
     }
 
@@ -23,7 +23,7 @@ class EditorViewController: NSViewController {
         super.viewDidLoad()
         view.frame.size = CGSize(width: 500, height: 500)
 
-        annotationsPlugin.dataSource = self
+        annotationsPlugin = AnnotationsPlugin(dataSource: self)
 
         textView.addPlugin(
            annotationsPlugin
@@ -59,32 +59,33 @@ import SwiftUI
 
 extension EditorViewController: AnnotationsDataSource {
 
-    private func removeAnnotation(_ annotation: STLineAnnotation) {
-        annotations.removeAll(where: { $0 == annotation })
+    private func removeAnnotation(_ annotation: MessageLineAnnotation) {
+        annotations.removeAll(where: { $0.id == annotation.id })
     }
 
-    func textView(_ textView: STTextView, viewForLineAnnotation lineAnnotation: STLineAnnotation, textLineFragment: NSTextLineFragment) -> NSView? {
+    func textView(_ textView: STTextView, viewForLineAnnotation lineAnnotation: any LineAnnotation, textLineFragment: NSTextLineFragment) -> NSView? {
         guard let myLineAnnotation = lineAnnotation as? MessageLineAnnotation else {
+            assertionFailure()
             return nil
         }
 
         let messageFont = NSFont.preferredFont(forTextStyle: .body)
 
-        let decorationView = STAnnotationLabelView(
+        let decorationView = AnnotationLabelView(
             annotation: myLineAnnotation,
-            label: AnnotationLabelView(
+            label: LabelView(
                 message: myLineAnnotation.message,
                 action: { [weak self] annotation in
                     self?.removeAnnotation(annotation)
                 },
-                lineAnnotation: lineAnnotation
+                lineAnnotation: myLineAnnotation
             )
             .font(Font(messageFont))
         )
 
         // Position
 
-        let segmentFrame = textView.textLayoutManager.textSegmentFrame(at: lineAnnotation.location, type: .standard)!
+        let segmentFrame = textView.textLayoutManager.textSegmentFrame(at: myLineAnnotation.location, type: .standard)!
         let annotationHeight = min(textLineFragment.typographicBounds.height, textView.font?.boundingRectForFont.height ?? 24)
 
         decorationView.frame = CGRect(
@@ -96,7 +97,7 @@ extension EditorViewController: AnnotationsDataSource {
         return decorationView
     }
 
-    func textViewAnnotations() -> [STLineAnnotation] {
+    func textViewAnnotations() -> [any LineAnnotation] {
         annotations
     }
 
