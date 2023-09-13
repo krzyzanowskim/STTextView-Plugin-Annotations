@@ -2,7 +2,7 @@
 
 import PackageDescription
 
-let pluginName = "Dummy"
+let pluginName = "Annotations"
 let pluginTargetName = "\(pluginName)Plugin"
 
 let package = Package(

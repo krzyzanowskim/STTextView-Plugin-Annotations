@@ -7,14 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		752C90732AB1AF12006C835E /* AnnotationLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752C90722AB1AF12006C835E /* AnnotationLabelView.swift */; };
+		752C90752AB1FA5F006C835E /* LineAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752C90742AB1FA5F006C835E /* LineAnnotation.swift */; };
 		7565EBBE2A9BE09D0005B170 /* EditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7565EBBD2A9BE09D0005B170 /* EditorViewController.swift */; };
 		7565EBC12A9BE0B10005B170 /* STTextView in Frameworks */ = {isa = PBXBuildFile; productRef = 7565EBC02A9BE0B10005B170 /* STTextView */; };
+		7576EDCD2AB062F400540BF5 /* STTextViewAnnotationsPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 7576EDCC2AB062F400540BF5 /* STTextViewAnnotationsPlugin */; };
 		758BAB532A9BDFC200D840BF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 758BAB522A9BDFC200D840BF /* AppDelegate.swift */; };
 		758BAB552A9BDFC300D840BF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 758BAB542A9BDFC300D840BF /* Assets.xcassets */; };
 		758BAB582A9BDFC300D840BF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 758BAB562A9BDFC300D840BF /* MainMenu.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		752C90722AB1AF12006C835E /* AnnotationLabelView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnnotationLabelView.swift; sourceTree = "<group>"; };
+		752C90742AB1FA5F006C835E /* LineAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineAnnotation.swift; sourceTree = "<group>"; };
 		7565EBBD2A9BE09D0005B170 /* EditorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditorViewController.swift; sourceTree = "<group>"; };
 		758BAB4F2A9BDFC200D840BF /* DemoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DemoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		758BAB522A9BDFC200D840BF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -29,21 +34,32 @@
 			buildActionMask = 2147483647;
 			files = (
 				7565EBC12A9BE0B10005B170 /* STTextView in Frameworks */,
+				7576EDCD2AB062F400540BF5 /* STTextViewAnnotationsPlugin in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7576EDCB2AB062F400540BF5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		758BAB462A9BDFC200D840BF = {
 			isa = PBXGroup;
 			children = (
 				7565EBBD2A9BE09D0005B170 /* EditorViewController.swift */,
+				752C90722AB1AF12006C835E /* AnnotationLabelView.swift */,
+				752C90742AB1FA5F006C835E /* LineAnnotation.swift */,
 				758BAB522A9BDFC200D840BF /* AppDelegate.swift */,
 				758BAB542A9BDFC300D840BF /* Assets.xcassets */,
 				758BAB562A9BDFC300D840BF /* MainMenu.xib */,
 				758BAB592A9BDFC300D840BF /* DemoApp.entitlements */,
 				758BAB502A9BDFC200D840BF /* Products */,
+				7576EDCB2AB062F400540BF5 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -73,6 +89,7 @@
 			name = DemoApp;
 			packageProductDependencies = (
 				7565EBC02A9BE0B10005B170 /* STTextView */,
+				7576EDCC2AB062F400540BF5 /* STTextViewAnnotationsPlugin */,
 			);
 			productName = DemoApp;
 			productReference = 758BAB4F2A9BDFC200D840BF /* DemoApp.app */;
@@ -132,6 +149,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				758BAB532A9BDFC200D840BF /* AppDelegate.swift in Sources */,
+				752C90732AB1AF12006C835E /* AnnotationLabelView.swift in Sources */,
+				752C90752AB1FA5F006C835E /* LineAnnotation.swift in Sources */,
 				7565EBBE2A9BE09D0005B170 /* EditorViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -358,6 +377,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 7565EBBF2A9BE0B10005B170 /* XCRemoteSwiftPackageReference "STTextView" */;
 			productName = STTextView;
+		};
+		7576EDCC2AB062F400540BF5 /* STTextViewAnnotationsPlugin */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = STTextViewAnnotationsPlugin;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
