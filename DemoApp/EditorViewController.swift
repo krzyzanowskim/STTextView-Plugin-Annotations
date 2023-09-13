@@ -7,7 +7,7 @@ class EditorViewController: NSViewController {
 
     private var annotationsPlugin = AnnotationsPlugin()
     private var textView: STTextView!
-    private var annotations: [LineAnnotation] = [] {
+    private var annotations: [MessageLineAnnotation] = [] {
         didSet {
             // TODO: reload annotations
         }
@@ -45,7 +45,7 @@ class EditorViewController: NSViewController {
             let stringRange = textView.string.startIndex..<textView.string.endIndex
             if let ocurrenceRange = textView.string.range(of: "Foundation", range: stringRange) {
                 let characterLocationOffset = textView.string.distance(from: textView.string.startIndex, to: ocurrenceRange.upperBound)
-                let annotation = try! LineAnnotation(
+                let annotation = try! MessageLineAnnotation(
                     message: AttributedString(markdown: "**TODO**: to cry _or_ not to cry"),
                     location: textView.textLayoutManager.location(textView.textLayoutManager.documentRange.location, offsetBy: characterLocationOffset)!
                 )
@@ -64,7 +64,7 @@ extension EditorViewController: AnnotationsDataSource {
     }
 
     func textView(_ textView: STTextView, viewForLineAnnotation lineAnnotation: STLineAnnotation, textLineFragment: NSTextLineFragment) -> NSView? {
-        guard let myLineAnnotation = lineAnnotation as? LineAnnotation else {
+        guard let myLineAnnotation = lineAnnotation as? MessageLineAnnotation else {
             return nil
         }
 

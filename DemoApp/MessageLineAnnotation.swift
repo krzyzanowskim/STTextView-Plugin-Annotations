@@ -1,7 +1,7 @@
 import Cocoa
 import AnnotationsPlugin
 
-final class LineAnnotation: STLineAnnotation {
+final class MessageLineAnnotation: STLineAnnotation {
     let message: AttributedString
 
     init(message: AttributedString, location: NSTextLocation) {

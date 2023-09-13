@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		752C90732AB1AF12006C835E /* AnnotationLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752C90722AB1AF12006C835E /* AnnotationLabelView.swift */; };
-		752C90752AB1FA5F006C835E /* LineAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752C90742AB1FA5F006C835E /* LineAnnotation.swift */; };
+		752C90752AB1FA5F006C835E /* MessageLineAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752C90742AB1FA5F006C835E /* MessageLineAnnotation.swift */; };
 		7565EBBE2A9BE09D0005B170 /* EditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7565EBBD2A9BE09D0005B170 /* EditorViewController.swift */; };
 		7565EBC12A9BE0B10005B170 /* STTextView in Frameworks */ = {isa = PBXBuildFile; productRef = 7565EBC02A9BE0B10005B170 /* STTextView */; };
 		7576EDCD2AB062F400540BF5 /* STTextViewAnnotationsPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 7576EDCC2AB062F400540BF5 /* STTextViewAnnotationsPlugin */; };
@@ -53,7 +53,7 @@
 			children = (
 				7565EBBD2A9BE09D0005B170 /* EditorViewController.swift */,
 				752C90722AB1AF12006C835E /* AnnotationLabelView.swift */,
-				752C90742AB1FA5F006C835E /* LineAnnotation.swift */,
+				752C90742AB1FA5F006C835E /* MessageLineAnnotation.swift */,
 				758BAB522A9BDFC200D840BF /* AppDelegate.swift */,
 				758BAB542A9BDFC300D840BF /* Assets.xcassets */,
 				758BAB562A9BDFC300D840BF /* MainMenu.xib */,
@@ -150,7 +150,7 @@
 			files = (
 				758BAB532A9BDFC200D840BF /* AppDelegate.swift in Sources */,
 				752C90732AB1AF12006C835E /* AnnotationLabelView.swift in Sources */,
-				752C90752AB1FA5F006C835E /* LineAnnotation.swift in Sources */,
+				752C90752AB1FA5F006C835E /* MessageLineAnnotation.swift in Sources */,
 				7565EBBE2A9BE09D0005B170 /* EditorViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
