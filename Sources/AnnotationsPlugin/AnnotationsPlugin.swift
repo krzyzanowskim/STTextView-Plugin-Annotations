@@ -78,6 +78,7 @@ extension AnnotationsPlugin {
             self.parent = parent
         }
 
+        @MainActor
         func layoutAnnotationViewsIfNeeded() {
             guard let dataSource = parent.dataSource else {
                 return
