@@ -83,11 +83,6 @@ extension AnnotationsPlugin {
             guard let dataSource = parent.dataSource else {
                 return
             }
-            
-            let annotations = dataSource.textViewAnnotations()
-            guard annotations.count != annotationsViews.count else {
-                return
-            }
 
             // Remove all views
             for view in annotationsViews {
@@ -97,7 +92,7 @@ extension AnnotationsPlugin {
 
             // Add views for annotations
             let textLayoutManager = context.textView.textLayoutManager
-            for annotation in annotations {
+            for annotation in dataSource.textViewAnnotations() {
                 textLayoutManager.ensureLayout(for: NSTextRange(location: annotation.location))
                 if let textLineFragment = textLayoutManager.textLineFragment(at: annotation.location) {
                     if let annotationView = dataSource.textView(context.textView, viewForLineAnnotation: annotation, textLineFragment: textLineFragment) {
