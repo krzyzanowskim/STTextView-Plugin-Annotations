@@ -35,7 +35,7 @@ struct LabelView<T: LineAnnotation>: View {
             .buttonStyle(.plain)
         }
         .background(Color.yellow)
-        .clipShape(RoundedRectangle(cornerRadius:4))
+        .clipShape(UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(topLeading: 4, bottomLeading: 4, bottomTrailing: 0, topTrailing: 0), style: .circular))
         .labelStyle(AnnotationLabelStyle())
     }
 }
