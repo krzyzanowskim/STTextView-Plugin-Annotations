@@ -7,16 +7,25 @@ public class AnnotationsPlugin: STPlugin {
     private weak var dataSource: AnnotationsDataSource?
     private var reloadDataHandler: (() -> Void)?
 
+    // Annotations surface view. Add annotations to this view.
+    private var annotationsContentView: AnnotationsContentView!
+
     public init(dataSource: AnnotationsDataSource) {
         self.dataSource = dataSource
     }
 
     public func setUp(context: any Context) {
+        self.annotationsContentView = AnnotationsContentView(frame: context.textView.frame)
+        annotationsContentView.wantsLayer = true
+        annotationsContentView.autoresizingMask = [.height, .width]
+        context.textView.addSubview(annotationsContentView)
+
         context.events.onDidChangeText { [weak self] affectedRange, replacementString in
             self?.didChangeText(context: context, in: affectedRange, replacementString: replacementString)
         }
 
         context.events.onDidLayoutViewport { [weak self] range in
+            self?.annotationsContentView.frame = context.textView.frame
             self?.didLayoutViewport(context: context, range)
         }
 
@@ -47,7 +56,6 @@ public class AnnotationsPlugin: STPlugin {
         // we need to reposition all views that may be
         // affected by the text change
         context.coordinator.layoutAnnotationViewsIfNeeded()
-
     }
 
     private func didLayoutViewport(context: any Context, _ range: NSTextRange?) {
@@ -69,7 +77,6 @@ public class AnnotationsPlugin: STPlugin {
 extension AnnotationsPlugin {
 
     public class Coordinator {
-        private var annotationsViews: [NSView] = []
         private let parent: AnnotationsPlugin
         private let context: CoordinatorContext
 
@@ -84,29 +91,23 @@ extension AnnotationsPlugin {
                 return
             }
 
-            // Remove all views
-            for view in annotationsViews {
-                view.removeFromSuperview()
-            }
-            annotationsViews.removeAll()
-
             // Add views for annotations
+            var annotationViews: [NSView] = []
             let textLayoutManager = context.textView.textLayoutManager
             for annotation in dataSource.textViewAnnotations() {
                 textLayoutManager.ensureLayout(for: NSTextRange(location: annotation.location))
                 if let textLineFragment = textLayoutManager.textLineFragment(at: annotation.location) {
                     if let annotationView = dataSource.textView(context.textView, viewForLineAnnotation: annotation, textLineFragment: textLineFragment) {
                         // Set or Update view
-                        context.textView.addSubview(annotationView)
-                        annotationsViews.append(annotationView)
+                        annotationViews.append(annotationView)
                     } else {
                         assertionFailure()
                     }
                 }
-
             }
-        }
 
+            parent.annotationsContentView.subviews = annotationViews
+        }
     }
 
 }
