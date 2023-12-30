@@ -90,7 +90,7 @@ extension EditorViewController: AnnotationsDataSource {
         decorationView.frame = CGRect(
             x: segmentFrame.maxX,
             y: segmentFrame.minY + (segmentFrame.height - annotationHeight),
-            width: textView.bounds.width - segmentFrame.maxX,
+            width: textView.visibleRect.maxX - segmentFrame.maxX,
             height: annotationHeight
         )
         return decorationView
