@@ -17,38 +17,11 @@ open class AnnotationView: NSView {
 
         var body: some View {
             content
-                .labelStyle(AnnotationLabelStyle())
                 .disabled(!isEnabled)
         }
     }
 
-    private struct AnnotationLabelStyle: LabelStyle {
-        @Environment(\.colorScheme) private var colorScheme
-
-        func makeBody(configuration: Configuration) -> some View {
-            HStack(alignment: .center, spacing: 0) {
-                configuration.icon
-                    .padding(.horizontal, 4)
-                    .controlSize(.large)
-                    .contentShape(Rectangle())
-
-                Rectangle()
-                    .foregroundColor(.white)
-                    .frame(width: 1)
-                    .frame(maxHeight: .infinity)
-
-                configuration.title
-                    .padding(.leading, 4)
-                    .padding(.trailing, 16)
-                    .lineLimit(1)
-                    .truncationMode(.tail)
-                    .textSelection(.enabled)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }
-        }
-    }
-
-    public init<Label: View>(_ content: Label) {
+    public init<Content: View>(_ content: Content) {
         super.init(frame: .zero)
         
         let hostingView = NSHostingView(rootView: ContentView(content))

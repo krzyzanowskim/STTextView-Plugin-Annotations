@@ -15,6 +15,7 @@ struct LabelView<T: LineAnnotation>: View {
         Label {
             Text(message)
                 .foregroundColor(.primary)
+                .frame(maxWidth: .infinity, alignment: .leading)
         } icon: {
             Button {
                 action(lineAnnotation)
@@ -35,5 +36,31 @@ struct LabelView<T: LineAnnotation>: View {
         }
         .background(Color.yellow)
         .clipShape(RoundedRectangle(cornerRadius:4))
+        .labelStyle(AnnotationLabelStyle())
+    }
+}
+
+private struct AnnotationLabelStyle: LabelStyle {
+    @Environment(\.colorScheme) private var colorScheme
+
+    func makeBody(configuration: Configuration) -> some View {
+        HStack(alignment: .center, spacing: 0) {
+            configuration.icon
+                .padding(.horizontal, 4)
+                .controlSize(.large)
+                .contentShape(Rectangle())
+
+            Rectangle()
+                .foregroundColor(.white)
+                .frame(width: 1)
+                .frame(maxHeight: .infinity)
+
+            configuration.title
+                .padding(.leading, 4)
+                .padding(.trailing, 16)
+                .lineLimit(1)
+                .truncationMode(.tail)
+                .textSelection(.enabled)
+        }
     }
 }
