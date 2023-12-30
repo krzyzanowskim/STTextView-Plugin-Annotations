@@ -5,18 +5,18 @@ import AppKit
 import SwiftUI
 
 /// Covenience annotation view implementation provided by the framework.
-open class AnnotationLabelView: NSView {
+open class AnnotationView: NSView {
 
-    private struct ContentView<Label: View>: View {
+    private struct ContentView<Content: View>: View {
         @Environment(\.isEnabled) private var isEnabled
-        var label: Label
+        var content: Content
 
-        init(_ label: Label) {
-            self.label = label
+        init(_ label: Content) {
+            self.content = label
         }
 
         var body: some View {
-            label
+            content
                 .labelStyle(AnnotationLabelStyle())
                 .disabled(!isEnabled)
         }
@@ -48,14 +48,10 @@ open class AnnotationLabelView: NSView {
         }
     }
 
-    public let annotation: any LineAnnotation
-
-    public init<Label: View>(annotation: any LineAnnotation, label: Label) {
-        self.annotation = annotation
-
+    public init<Label: View>(_ content: Label) {
         super.init(frame: .zero)
         
-        let hostingView = NSHostingView(rootView: ContentView(label))
+        let hostingView = NSHostingView(rootView: ContentView(content))
         hostingView.autoresizingMask = [.height, .width]
         addSubview(hostingView)
     }

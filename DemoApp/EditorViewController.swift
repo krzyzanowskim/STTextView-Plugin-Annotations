@@ -71,9 +71,8 @@ extension EditorViewController: AnnotationsDataSource {
 
         let messageFont = NSFont.preferredFont(forTextStyle: .body)
 
-        let decorationView = AnnotationLabelView(
-            annotation: myLineAnnotation,
-            label: LabelView(
+        let decorationView = AnnotationView(
+            LabelView(
                 message: myLineAnnotation.message,
                 action: { [weak self] annotation in
                     self?.removeAnnotation(annotation)
