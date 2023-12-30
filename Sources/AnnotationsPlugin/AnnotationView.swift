@@ -11,8 +11,8 @@ open class AnnotationView: NSView {
         @Environment(\.isEnabled) private var isEnabled
         var content: Content
 
-        init(_ label: Content) {
-            self.content = label
+        init(_ content: Content) {
+            self.content = content
         }
 
         var body: some View {
