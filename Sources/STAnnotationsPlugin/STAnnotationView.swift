@@ -5,28 +5,16 @@ import AppKit
 import SwiftUI
 
 /// Covenience annotation view implementation provided by the framework.
-open class AnnotationView: NSView {
+open class STAnnotationView: NSView {
 
-    private struct ContentView<Content: View>: View {
-        @Environment(\.isEnabled) private var isEnabled
-        var content: Content
-
-        init(_ content: Content) {
-            self.content = content
-        }
-
-        var body: some View {
-            content
-                .disabled(!isEnabled)
-        }
-    }
-
-    public init<Content: View>(_ content: Content) {
+    public init<Content: View>(frame: CGRect, @ViewBuilder content: () -> Content) {
         super.init(frame: .zero)
         
-        let hostingView = NSHostingView(rootView: ContentView(content))
+        let hostingView = NSHostingView(rootView: content())
         hostingView.autoresizingMask = [.height, .width]
         addSubview(hostingView)
+
+        self.frame = frame
     }
 
     @available(*, unavailable)

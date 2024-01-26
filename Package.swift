@@ -2,24 +2,21 @@
 
 import PackageDescription
 
-let pluginName = "Annotations"
-let pluginTargetName = "\(pluginName)Plugin"
-
 let package = Package(
-    name: "STTextView-Plugin-\(pluginName)",
+    name: "STTextView-Plugin-Annotations",
     platforms: [.macOS(.v12)],
     products: [
         .library(
-            name: "STTextView\(pluginName)Plugin",
-            targets: [pluginTargetName]
+            name: "STTextViewAnnotationsPlugin",
+            targets: ["STAnnotationsPlugin"]
         )
     ],
     dependencies: [
-        .package(url: "https://github.com/krzyzanowskim/STTextView", from: "0.8.22")
+        .package(url: "https://github.com/krzyzanowskim/STTextView", from: "0.8.23")
     ],
     targets: [
         .target(
-            name: pluginTargetName,
+            name: "STAnnotationsPlugin",
             dependencies: [
                 .product(name: "STTextView", package: "STTextView")
             ]

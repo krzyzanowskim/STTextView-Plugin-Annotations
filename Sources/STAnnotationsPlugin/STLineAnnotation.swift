@@ -1,5 +1,5 @@
 import AppKit
 
-public protocol LineAnnotation: Identifiable {
+public protocol STLineAnnotation: Identifiable {
     var location: NSTextLocation { get set }
 }

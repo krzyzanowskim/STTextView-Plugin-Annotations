@@ -1,16 +1,16 @@
 import Cocoa
 import STTextView
 
-public class AnnotationsPlugin: STPlugin {
+public class STAnnotationsPlugin: STPlugin {
 
     /// Data Source
-    private weak var dataSource: AnnotationsDataSource?
+    private weak var dataSource: STAnnotationsDataSource?
     private var reloadDataHandler: (() -> Void)?
 
     // Annotations surface view. Add annotations to this view.
     private var annotationsContentView: AnnotationsContentView!
 
-    public init(dataSource: AnnotationsDataSource) {
+    public init(dataSource: STAnnotationsDataSource) {
         self.dataSource = dataSource
     }
 
@@ -74,13 +74,13 @@ public class AnnotationsPlugin: STPlugin {
     }
 }
 
-extension AnnotationsPlugin {
+extension STAnnotationsPlugin {
 
     public class Coordinator {
-        private let parent: AnnotationsPlugin
+        private let parent: STAnnotationsPlugin
         private let context: CoordinatorContext
 
-        init(parent: AnnotationsPlugin, context: CoordinatorContext) {
+        init(parent: STAnnotationsPlugin, context: CoordinatorContext) {
             self.context = context
             self.parent = parent
         }
@@ -97,11 +97,18 @@ extension AnnotationsPlugin {
             for annotation in dataSource.textViewAnnotations() {
                 textLayoutManager.ensureLayout(for: NSTextRange(location: annotation.location))
                 if let textLineFragment = textLayoutManager.textLineFragment(at: annotation.location) {
-                    if let annotationView = dataSource.textView(context.textView, viewForLineAnnotation: annotation, textLineFragment: textLineFragment) {
-                        // Set or Update view
+
+                    // Calculate proposed annotation view frame
+                    let segmentFrame = context.textView.textLayoutManager.textSegmentFrame(at: annotation.location, type: .standard, options: [.upstreamAffinity])!
+                    let proposedFrame = CGRect(
+                        x: segmentFrame.maxX + 1.4,
+                        y: segmentFrame.minY,
+                        width: context.textView.visibleRect.maxX - segmentFrame.maxX,
+                        height: textLineFragment.typographicBounds.height
+                    )
+                    
+                    if let annotationView = dataSource.textView(context.textView, viewForLineAnnotation: annotation, textLineFragment: textLineFragment, proposedViewFrame: proposedFrame) {
                         annotationViews.append(annotationView)
-                    } else {
-                        assertionFailure()
                     }
                 }
             }

@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		752C90732AB1AF12006C835E /* LabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752C90722AB1AF12006C835E /* LabelView.swift */; };
+		752C90732AB1AF12006C835E /* AnnotationLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752C90722AB1AF12006C835E /* AnnotationLabelView.swift */; };
 		752C90752AB1FA5F006C835E /* MessageLineAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752C90742AB1FA5F006C835E /* MessageLineAnnotation.swift */; };
 		7565EBBE2A9BE09D0005B170 /* EditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7565EBBD2A9BE09D0005B170 /* EditorViewController.swift */; };
 		7565EBC12A9BE0B10005B170 /* STTextView in Frameworks */ = {isa = PBXBuildFile; productRef = 7565EBC02A9BE0B10005B170 /* STTextView */; };
@@ -18,7 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		752C90722AB1AF12006C835E /* LabelView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LabelView.swift; sourceTree = "<group>"; };
+		752C90722AB1AF12006C835E /* AnnotationLabelView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnnotationLabelView.swift; sourceTree = "<group>"; };
 		752C90742AB1FA5F006C835E /* MessageLineAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageLineAnnotation.swift; sourceTree = "<group>"; };
 		7565EBBD2A9BE09D0005B170 /* EditorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditorViewController.swift; sourceTree = "<group>"; };
 		7576EDCA2AB0627D00540BF5 /* STTextView-Plugin-Annotations */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "STTextView-Plugin-Annotations"; path = ..; sourceTree = "<group>"; };
@@ -27,6 +27,7 @@
 		758BAB542A9BDFC300D840BF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		758BAB572A9BDFC300D840BF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		758BAB592A9BDFC300D840BF /* DemoApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DemoApp.entitlements; sourceTree = "<group>"; };
+		75E3BF172B6305B800680EE4 /* STTextView */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = STTextView; path = ../../STTextView; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,10 +53,11 @@
 		758BAB462A9BDFC200D840BF = {
 			isa = PBXGroup;
 			children = (
+				75E3BF172B6305B800680EE4 /* STTextView */,
 				7576EDCA2AB0627D00540BF5 /* STTextView-Plugin-Annotations */,
+				7590AFEA2B64617E00947F82 /* View */,
+				7590AFE92B64617300947F82 /* Model */,
 				7565EBBD2A9BE09D0005B170 /* EditorViewController.swift */,
-				752C90722AB1AF12006C835E /* LabelView.swift */,
-				752C90742AB1FA5F006C835E /* MessageLineAnnotation.swift */,
 				758BAB522A9BDFC200D840BF /* AppDelegate.swift */,
 				758BAB542A9BDFC300D840BF /* Assets.xcassets */,
 				758BAB562A9BDFC300D840BF /* MainMenu.xib */,
@@ -71,6 +73,22 @@
 				758BAB4F2A9BDFC200D840BF /* DemoApp.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		7590AFE92B64617300947F82 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				752C90742AB1FA5F006C835E /* MessageLineAnnotation.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		7590AFEA2B64617E00947F82 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				752C90722AB1AF12006C835E /* AnnotationLabelView.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -151,7 +169,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				758BAB532A9BDFC200D840BF /* AppDelegate.swift in Sources */,
-				752C90732AB1AF12006C835E /* LabelView.swift in Sources */,
+				752C90732AB1AF12006C835E /* AnnotationLabelView.swift in Sources */,
 				752C90752AB1FA5F006C835E /* MessageLineAnnotation.swift in Sources */,
 				7565EBBE2A9BE09D0005B170 /* EditorViewController.swift in Sources */,
 			);

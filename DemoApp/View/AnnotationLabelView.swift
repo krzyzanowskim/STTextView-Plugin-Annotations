@@ -4,21 +4,29 @@
 import SwiftUI
 import Foundation
 import STTextView
-import AnnotationsPlugin
+import STAnnotationsPlugin
 
-struct LabelView<T: LineAnnotation>: View {
-    let message: AttributedString
-    let action: (T) -> Void
-    let lineAnnotation: T
+struct AnnotationLabelView : View {
+    @Environment(\.colorScheme) private var colorScheme
+
+    private let text: Text
+    private let annotation: MessageLineAnnotation
+    private let action: (MessageLineAnnotation) -> Void
+
+    init(_ text: Text, annotation: MessageLineAnnotation, action: @escaping (MessageLineAnnotation) -> Void) {
+        self.text = text
+        self.action = action
+        self.annotation = annotation
+    }
 
     var body: some View {
         Label {
-            Text(message)
+            text
                 .foregroundColor(.primary)
                 .frame(maxWidth: .infinity, alignment: .leading)
         } icon: {
             Button {
-                action(lineAnnotation)
+                action(annotation)
             } label: {
                 ZStack {
                     // the way it draws bothers me
@@ -34,9 +42,12 @@ struct LabelView<T: LineAnnotation>: View {
             }
             .buttonStyle(.plain)
         }
-        .background(Color.yellow)
-        .clipShape(UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(topLeading: 4, bottomLeading: 4, bottomTrailing: 0, topTrailing: 0), style: .circular))
+        .background(
+            annotation.kind.color.background(Color.white)
+        )
+        .clipShape(UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(topLeading: 2, bottomLeading: 2), style: .circular))
         .labelStyle(AnnotationLabelStyle())
+        .shadow(radius: 1, x: 0.3, y: 0.5)
     }
 }
 
@@ -63,4 +74,18 @@ private struct AnnotationLabelStyle: LabelStyle {
                 .textSelection(.enabled)
         }
     }
+}
+
+private extension AnnotationKind {
+    var color: Color {
+        switch self {
+        case .info:
+            Color.accentColor.opacity(0.2)
+        case .warning:
+            Color.yellow.opacity(0.2)
+        case .error:
+            Color.red.opacity(0.2)
+        }
+    }
+
 }
