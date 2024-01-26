@@ -27,7 +27,6 @@
 		758BAB542A9BDFC300D840BF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		758BAB572A9BDFC300D840BF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		758BAB592A9BDFC300D840BF /* DemoApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DemoApp.entitlements; sourceTree = "<group>"; };
-		75E3BF172B6305B800680EE4 /* STTextView */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = STTextView; path = ../../STTextView; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,7 +52,6 @@
 		758BAB462A9BDFC200D840BF = {
 			isa = PBXGroup;
 			children = (
-				75E3BF172B6305B800680EE4 /* STTextView */,
 				7576EDCA2AB0627D00540BF5 /* STTextView-Plugin-Annotations */,
 				7590AFEA2B64617E00947F82 /* View */,
 				7590AFE92B64617300947F82 /* Model */,
