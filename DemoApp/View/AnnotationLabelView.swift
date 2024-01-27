@@ -38,16 +38,29 @@ struct AnnotationLabelView : View {
                     Image(systemName: "xmark.octagon")
                         .foregroundStyle(.white)
                 }
-                .shadow(radius: 1)
+                .shadow(color: annotation.kind.color, radius: 1)
             }
             .buttonStyle(.plain)
         }
-        .background(
-            annotation.kind.color.background(Color.white)
+        .labelStyle(
+            AnnotationLabelStyle()
         )
-        .clipShape(UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(topLeading: 2, bottomLeading: 2), style: .circular))
-        .labelStyle(AnnotationLabelStyle())
-        .shadow(radius: 1, x: 0.3, y: 0.5)
+        .background(
+            ZStack {
+                ContainerRelativeShape()
+                    .fill(annotation.kind.color)
+                    .background(.background)
+
+                ContainerRelativeShape()
+                    .stroke(annotation.kind.color)
+            }
+        )
+        .containerShape(
+            UnevenRoundedRectangle(
+                cornerRadii: RectangleCornerRadii(topLeading: 2, bottomLeading: 2),
+                style: .circular
+            )
+        )
     }
 }
 
@@ -62,9 +75,10 @@ private struct AnnotationLabelStyle: LabelStyle {
                 .contentShape(Rectangle())
 
             Rectangle()
-                .foregroundColor(.white)
+                .foregroundStyle(.background)
                 .frame(width: 1)
                 .frame(maxHeight: .infinity)
+                .padding(.vertical, 0.5)
 
             configuration.title
                 .padding(.leading, 4)
