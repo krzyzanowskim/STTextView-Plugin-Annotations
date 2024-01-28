@@ -96,17 +96,21 @@ extension STAnnotationsPlugin {
             let textLayoutManager = context.textView.textLayoutManager
             for annotation in dataSource.textViewAnnotations() {
                 textLayoutManager.ensureLayout(for: NSTextRange(location: annotation.location))
-                if let textLineFragment = textLayoutManager.textLineFragment(at: annotation.location) {
+                if let textLayoutFragment = textLayoutManager.textLayoutFragment(for: annotation.location),
+                    let textLineFragment = textLayoutFragment.textLineFragment(at: annotation.location) {
+
+                    var lineFragmentFrame = textLayoutFragment.layoutFragmentFrame
+                    lineFragmentFrame.size.height = textLineFragment.typographicBounds.height
 
                     // Calculate proposed annotation view frame
                     let segmentFrame = context.textView.textLayoutManager.textSegmentFrame(at: annotation.location, type: .standard, options: [.upstreamAffinity])!
                     let proposedFrame = CGRect(
                         x: segmentFrame.maxX + 1.4,
-                        y: segmentFrame.minY,
+                        y: lineFragmentFrame.origin.y + textLineFragment.typographicBounds.minY,
                         width: context.textView.visibleRect.maxX - segmentFrame.maxX,
-                        height: textLineFragment.typographicBounds.height
-                    )
-                    
+                        height: lineFragmentFrame.height
+                    ).pixelAligned
+
                     if let annotationView = dataSource.textView(context.textView, viewForLineAnnotation: annotation, textLineFragment: textLineFragment, proposedViewFrame: proposedFrame) {
                         annotationViews.append(annotationView)
                     }
@@ -115,6 +119,23 @@ extension STAnnotationsPlugin {
 
             parent.annotationsContentView.subviews = annotationViews
         }
+    }
+
+}
+
+private extension CGRect {
+
+    var pixelAligned: CGRect {
+        // https://developer.apple.com/library/archive/documentation/GraphicsAnimation/Conceptual/HighResolutionOSX/APIs/APIs.html#//apple_ref/doc/uid/TP40012302-CH5-SW9
+        // NSIntegralRectWithOptions(self, [.alignMinXOutward, .alignMinYOutward, .alignWidthOutward, .alignMaxYOutward])
+#if os(macOS)
+        NSIntegralRectWithOptions(self, .alignAllEdgesNearest)
+#else
+        // NSIntegralRectWithOptions is not available in ObjC Foundation on iOS
+        // "self.integral" is not the same, but for now it has to be enough
+        // https://twitter.com/krzyzanowskim/status/1512451888515629063
+        self.integral
+#endif
     }
 
 }
