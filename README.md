@@ -10,10 +10,10 @@ import STAnnotationsPlugin
 // Implement AnnotationsDataSource protocol to provide annotations
 let plugin = STAnnotationsPlugin(dataSource: self)
 
-// Add/register plugin in the STTextView instance
+// Add/register the plugin in the STTextView instance
 textView.addPlugin(plugin)
 ```
 
-Check DemoApp for reference implementation
+Check DemoApp for a reference implementation.
 
-<img width="499" alt="Demo9" src="https://github.com/krzyzanowskim/STTextView-Plugin-Annotations/assets/758033/ce1e2050-977e-4be9-b78c-81023d66b4f2">
+![Screenshot 2024-02-05 at 02 23 26](https://github.com/krzyzanowskim/STTextView-Plugin-Annotations/assets/758033/9f77d1ea-097d-4325-b8ab-dac1da9a8ad1)
