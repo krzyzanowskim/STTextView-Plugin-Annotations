@@ -12,7 +12,7 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(url: "https://github.com/krzyzanowskim/STTextView", from: "0.8.25")
+        .package(url: "https://github.com/krzyzanowskim/STTextView", from: "0.9.6")
     ],
     targets: [
         .target(
