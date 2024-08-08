@@ -33,15 +33,16 @@ final class EditorViewController: NSViewController {
         textView.font = .monospacedSystemFont(ofSize: 0, weight: .regular)
 
         let defaultParagraphStyle = NSParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
-        // defaultParagraphStyle.lineHeightMultiple = 1.5
+        defaultParagraphStyle.lineHeightMultiple = 1.2
 
         textView.defaultParagraphStyle = defaultParagraphStyle
+        textView.highlightSelectedLine = true
 
         textView.string = """
         import Foundation
 
         func main() {
-            print("Hello World!)
+            print("Hello World!")
         }
         """
 
