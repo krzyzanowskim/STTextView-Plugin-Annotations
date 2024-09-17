@@ -1,4 +1,12 @@
-import Cocoa
+//
+//  MessageLineAnnotation.swift
+//  DemoApp
+//
+//  Created by Cubik65536 on 2024-09-16.
+//
+
+import UIKit
+
 import STAnnotationsPlugin
 
 enum AnnotationKind {

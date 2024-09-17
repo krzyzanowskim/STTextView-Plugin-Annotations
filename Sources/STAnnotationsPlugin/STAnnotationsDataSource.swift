@@ -1,11 +1,10 @@
-import Foundation
-import AppKit
+import UIKit
 import STTextView
 
 public protocol STAnnotationsDataSource: AnyObject {
 
     /// View for annotation.
-    func textView(_ textView: STTextView, viewForLineAnnotation lineAnnotation: any STLineAnnotation, textLineFragment: NSTextLineFragment, proposedViewFrame: CGRect) -> NSView?
+    func textView(_ textView: STTextView, viewForLineAnnotation lineAnnotation: any STLineAnnotation, textLineFragment: NSTextLineFragment, proposedViewFrame: CGRect) -> UIView?
 
     /// Annotations.
     ///

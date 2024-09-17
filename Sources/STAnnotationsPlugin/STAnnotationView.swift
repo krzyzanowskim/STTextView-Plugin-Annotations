@@ -1,17 +1,17 @@
 //  Created by Marcin Krzyzanowski
 //  https://github.com/krzyzanowskim/STTextView/blob/main/LICENSE.md
 
-import AppKit
+import UIKit
 import SwiftUI
 
 /// Covenience annotation view implementation provided by the framework.
-open class STAnnotationView: NSView {
+open class STAnnotationView: UIView {
 
     public init<Content: View>(frame: CGRect, @ViewBuilder content: () -> Content) {
         super.init(frame: .zero)
         
-        let hostingView = NSHostingView(rootView: content())
-        hostingView.autoresizingMask = [.height, .width]
+        let hostingView = _UIHostingView(rootView: content())
+//        hostingView.autoresizingMask = [.height, .width]
         addSubview(hostingView)
 
         self.frame = frame
@@ -22,8 +22,8 @@ open class STAnnotationView: NSView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    public override func resetCursorRects() {
-        super.resetCursorRects()
-        addCursorRect(bounds, cursor: .arrow)
-    }
+//    public override func resetCursorRects() {
+//        super.resetCursorRects()
+//        addCursorRect(bounds, cursor: .arrow)
+//    }
 }

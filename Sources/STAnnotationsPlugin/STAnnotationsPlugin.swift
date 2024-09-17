@@ -1,4 +1,4 @@
-import Cocoa
+import UIKit
 import STTextView
 
 public class STAnnotationsPlugin: STPlugin {
@@ -16,8 +16,8 @@ public class STAnnotationsPlugin: STPlugin {
 
     public func setUp(context: any Context) {
         self.annotationsContentView = AnnotationsContentView(frame: context.textView.frame)
-        annotationsContentView.wantsLayer = true
-        annotationsContentView.autoresizingMask = [.height, .width]
+//        annotationsContentView.wantsLayer = true
+//        annotationsContentView.autoresizingMask = [.height, .width]
         context.textView.addSubview(annotationsContentView)
 
         context.events.onDidChangeText { [weak self] affectedRange, replacementString in
@@ -92,7 +92,7 @@ extension STAnnotationsPlugin {
             }
 
             // Add views for annotations
-            var annotationViews: [NSView] = []
+            var annotationViews: [UIView] = []
             let textLayoutManager = context.textView.textLayoutManager
             for annotation in dataSource.textViewAnnotations() {
                 textLayoutManager.ensureLayout(for: NSTextRange(location: annotation.location))
@@ -107,7 +107,8 @@ extension STAnnotationsPlugin {
                     let proposedFrame = CGRect(
                         x: segmentFrame.maxX + 1.4,
                         y: lineFragmentFrame.origin.y + textLineFragment.typographicBounds.minY,
-                        width: context.textView.visibleRect.maxX - segmentFrame.maxX,
+//                        width: context.textView.visibleRect.maxX - segmentFrame.maxX,
+                        width: segmentFrame.maxX,
                         height: lineFragmentFrame.height
                     ).pixelAligned
 
@@ -117,7 +118,13 @@ extension STAnnotationsPlugin {
                 }
             }
 
-            parent.annotationsContentView.subviews = annotationViews
+//            parent.annotationsContentView.subviews = annotationViews
+            for subview in parent.annotationsContentView.subviews {
+                subview.removeFromSuperview()
+            }
+            for view in annotationViews {
+                parent.annotationsContentView.addSubview(view)
+            }
         }
     }
 

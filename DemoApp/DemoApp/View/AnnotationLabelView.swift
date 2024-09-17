@@ -1,8 +1,12 @@
-//  Created by Marcin Krzyzanowski
-//  https://github.com/krzyzanowskim/STTextView/blob/main/LICENSE.md
+//
+//  AnnotationLabelView.swift
+//  DemoApp
+//
+//  Created by Cubik65536 on 2024-09-16.
+//
 
 import SwiftUI
-import Foundation
+
 import STTextView
 import STAnnotationsPlugin
 

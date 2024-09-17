@@ -3,8 +3,8 @@
 import PackageDescription
 
 let package = Package(
-    name: "STTextView-Plugin-Annotations",
-    platforms: [.macOS(.v12)],
+    name: "STTextView-Plugin-Annotations-iOS",
+    platforms: [.iOS(.v16)],
     products: [
         .library(
             name: "STTextViewAnnotationsPlugin",
@@ -12,7 +12,7 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(url: "https://github.com/krzyzanowskim/STTextView", branch: "main")
+        .package(url: "https://github.com/iXORTech/STTextView", branch: "feat/ios-plugin-loading")
     ],
     targets: [
         .target(
