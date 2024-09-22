@@ -38,7 +38,7 @@ final class EditorViewController: NSViewController {
         textView.defaultParagraphStyle = defaultParagraphStyle
         textView.highlightSelectedLine = true
 
-        textView.string = """
+        textView.text = """
         import Foundation
 
         func main() {
