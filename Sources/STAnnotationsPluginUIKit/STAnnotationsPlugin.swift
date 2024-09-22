@@ -106,7 +106,7 @@ extension STAnnotationsPlugin {
                     let segmentFrame = context.textView.textLayoutManager.textSegmentFrame(at: annotation.location, type: .standard, options: [.upstreamAffinity])!
                     let proposedFrame = CGRect(
                         x: textLineFragment.typographicBounds.width + 75,
-                        y: lineFragmentFrame.origin.y - textLineFragment.typographicBounds.height,
+                        y: lineFragmentFrame.origin.y - segmentFrame.height - (textLineFragment.typographicBounds.height * 0.65),
                         width: context.textView.textInputView.frame.width - textLineFragment.typographicBounds.width,
                         height: textLineFragment.typographicBounds.height
                     ).pixelAligned
