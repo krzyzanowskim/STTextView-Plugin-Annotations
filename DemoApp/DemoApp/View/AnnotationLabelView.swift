@@ -12,22 +12,26 @@ import STAnnotationsPlugin
 
 struct AnnotationLabelView : View {
     @Environment(\.colorScheme) private var colorScheme
-
+    
     private let text: Text
     private let annotation: MessageLineAnnotation
     private let action: (MessageLineAnnotation) -> Void
-
-    init(_ text: Text, annotation: MessageLineAnnotation, action: @escaping (MessageLineAnnotation) -> Void) {
+    private let textWidth: CGFloat
+    private let textHeight: CGFloat
+    
+    init(_ text: Text, annotation: MessageLineAnnotation, textWidth: CGFloat, textHeight: CGFloat, action: @escaping (MessageLineAnnotation) -> Void) {
         self.text = text
         self.action = action
         self.annotation = annotation
+        self.textWidth = textWidth
+        self.textHeight = textHeight
     }
-
+    
     var body: some View {
         Label {
             text
                 .foregroundColor(.primary)
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(minWidth: textWidth, maxWidth: .infinity, alignment: .leading)
         } icon: {
             Button {
                 action(annotation)
@@ -38,7 +42,7 @@ struct AnnotationLabelView : View {
                     Image(systemName: "octagon")
                         .symbolVariant(.fill)
                         .foregroundStyle(.red)
-
+                    
                     Image(systemName: "xmark.octagon")
                         .foregroundStyle(.white)
                 }
@@ -54,7 +58,7 @@ struct AnnotationLabelView : View {
                 ContainerRelativeShape()
                     .fill(annotation.kind.color)
                     .background(.background)
-
+                
                 ContainerRelativeShape()
                     .stroke(annotation.kind.color)
             }
@@ -70,20 +74,20 @@ struct AnnotationLabelView : View {
 
 private struct AnnotationLabelStyle: LabelStyle {
     @Environment(\.colorScheme) private var colorScheme
-
+    
     func makeBody(configuration: Configuration) -> some View {
         HStack(alignment: .center, spacing: 0) {
             configuration.icon
                 .padding(.horizontal, 4)
                 .controlSize(.large)
                 .contentShape(Rectangle())
-
+            
             Rectangle()
                 .foregroundStyle(.background)
                 .frame(width: 1)
                 .frame(maxHeight: .infinity)
                 .padding(.vertical, 0.5)
-
+            
             configuration.title
                 .padding(.leading, 4)
                 .padding(.trailing, 16)
@@ -105,5 +109,5 @@ private extension AnnotationKind {
             Color.red.opacity(0.2)
         }
     }
-
+    
 }

@@ -11,7 +11,7 @@ open class STAnnotationView: UIView {
         super.init(frame: .zero)
         
         let hostingView = _UIHostingView(rootView: content())
-//        hostingView.autoresizingMask = [.height, .width]
+        hostingView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         addSubview(hostingView)
 
         self.frame = frame

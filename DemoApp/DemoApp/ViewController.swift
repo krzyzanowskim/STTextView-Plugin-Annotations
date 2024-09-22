@@ -38,12 +38,13 @@ class ViewController: UIViewController {
         textView.gutterView?.drawSeparator = true
         
         textView.text = """
-                import Foundation
-                
-                func main() {
-                    print("Hello World!")
-                }
-                """
+        import Foundation
+        import SwiftUI
+        
+        func main() {
+            print("Hello World!)
+        }
+        """
         
         view.addSubview(textView)
         self.textView = textView
@@ -114,7 +115,7 @@ extension ViewController: STAnnotationsDataSource {
         }
         
         return STAnnotationView(frame: proposedViewFrame) {
-            AnnotationLabelView(Text(lineAnnotation.message), annotation: lineAnnotation) { [weak self] annotation in
+            AnnotationLabelView(Text(lineAnnotation.message), annotation: lineAnnotation, textWidth: proposedViewFrame.width, textHeight: proposedViewFrame.height) { [weak self] annotation in
                 // Remove annotation
                 self?.annotations.removeAll(where: { $0.id == annotation.id })
             }
