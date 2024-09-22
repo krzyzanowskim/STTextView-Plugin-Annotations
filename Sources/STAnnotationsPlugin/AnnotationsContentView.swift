@@ -1,25 +1,21 @@
 import UIKit
 
 final class AnnotationsContentView: UIView {
-//    override var canBecomeKeyView: Bool {
-//        false
-//    }
-//
-//    override var acceptsFirstResponder: Bool {
-//        false
-//    }
-//
-//    override var isFlipped: Bool {
-//        true
-//    }
-//
-//    override dynamic func hitTest(_ point: NSPoint) -> NSView? {
-//        let result = super.hitTest(point)
-//
-//        if let view = result, view != self, view.isDescendant(of: self) {
-//            return view
-//        }
-//
-//        return nil
-//    }
+    override var canBecomeFocused: Bool {
+        false
+    }
+    
+    override var canBecomeFirstResponder: Bool {
+        false
+    }
+    
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        let result = super.hitTest(point, with: event)
+        
+        if let view = result, view != self, view.isDescendant(of: self) {
+            return view
+        }
+        
+        return nil
+    }
 }

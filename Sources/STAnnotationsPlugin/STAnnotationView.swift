@@ -21,9 +21,4 @@ open class STAnnotationView: UIView {
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
-//    public override func resetCursorRects() {
-//        super.resetCursorRects()
-//        addCursorRect(bounds, cursor: .arrow)
-//    }
 }
