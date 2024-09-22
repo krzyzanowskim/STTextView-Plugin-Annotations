@@ -33,22 +33,17 @@ struct AnnotationLabelView : View {
                 .foregroundColor(.primary)
                 .frame(minWidth: textWidth, maxWidth: .infinity, alignment: .leading)
         } icon: {
-            Button {
-                action(annotation)
-            } label: {
-                ZStack {
-                    // the way it draws bothers me
-                    // https://twitter.com/krzyzanowskim/status/1527723492002643969
-                    Image(systemName: "octagon")
-                        .symbolVariant(.fill)
-                        .foregroundStyle(.red)
-                    
-                    Image(systemName: "xmark.octagon")
-                        .foregroundStyle(.white)
-                }
-                .shadow(color: annotation.kind.color, radius: 1)
+            ZStack {
+                // the way it draws bothers me
+                // https://twitter.com/krzyzanowskim/status/1527723492002643969
+                Image(systemName: "octagon")
+                    .symbolVariant(.fill)
+                    .foregroundStyle(.red)
+                
+                Image(systemName: "xmark.octagon")
+                    .foregroundStyle(.white)
             }
-            .buttonStyle(.plain)
+            .shadow(color: annotation.kind.color, radius: 1)
         }
         .labelStyle(
             AnnotationLabelStyle()
