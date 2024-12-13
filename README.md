@@ -7,8 +7,20 @@ Add the plugin package as a dependency of your application, then register/add it
 ```swift
 import STAnnotationsPlugin
 
+class AnnotationDataSource: STAnnotationsDataSource {
+    func textView(_ textView: STTextView, viewForLineAnnotation lineAnnotation: any STLineAnnotation, textLineFragment: NSTextLineFragment, proposedViewFrame: CGRect) -> NSView? {
+        // view for annotation
+    }
+
+    func textViewAnnotations() -> [any STLineAnnotation] {
+        // return annotations
+    }
+}
+
+let dataSource = AnnotationDataSource()
+
 // Implement AnnotationsDataSource protocol to provide annotations
-let plugin = STAnnotationsPlugin(dataSource: self)
+let plugin = STAnnotationsPlugin(dataSource: dataSource)
 
 // Add/register the plugin in the STTextView instance
 textView.addPlugin(plugin)
