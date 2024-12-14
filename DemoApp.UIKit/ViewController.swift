@@ -5,15 +5,15 @@ import STTextView
 import STAnnotationsPlugin
 import STAnnotationsPluginShared
 
-class ViewController: UIViewController {
-    
+class ViewController: UIViewController, STAnnotationsDataSource {
+
     @ViewLoading
     private var textView: STTextView
     
     @ViewLoading
     private var annotationsPlugin: STAnnotationsPlugin
     
-    private var annotations: [any STLineAnnotation] = [] {
+    var textViewAnnotations: [any STLineAnnotation] = [] {
         didSet {
             annotationsPlugin.reloadAnnotations()
         }
@@ -72,7 +72,7 @@ class ViewController: UIViewController {
             location: textView.textLayoutManager.location(textView.textLayoutManager.documentRange.location, offsetBy: 56)!
         )
         
-        annotations += [annotation1, annotation2]
+        textViewAnnotations += [annotation1, annotation2]
     }
     
 }
@@ -99,18 +99,5 @@ extension ViewController: STTextViewDelegate {
     
     func textView(_ textView: STTextView, clickedOnLink link: Any, at location: any NSTextLocation) -> Bool {
         false
-    }
-}
-
-extension ViewController: STAnnotationsDataSource {
-    
-    var textViewAnnotations: [any STLineAnnotation] {
-        get {
-            annotations
-        }
-
-        set {
-            annotations = newValue
-        }
     }
 }

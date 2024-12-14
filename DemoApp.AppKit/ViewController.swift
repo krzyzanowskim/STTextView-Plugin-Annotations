@@ -4,7 +4,7 @@ import STTextView
 
 import STAnnotationsPlugin
 
-final class ViewController: NSViewController {
+final class ViewController: NSViewController, STAnnotationsDataSource {
 
     @ViewLoading
     private var annotationsPlugin: STAnnotationsPlugin
@@ -12,7 +12,7 @@ final class ViewController: NSViewController {
     @ViewLoading
     private var textView: STTextView
 
-    private var annotations: [any STLineAnnotation] = [] {
+    var textViewAnnotations: [any STLineAnnotation] = [] {
         didSet {
             annotationsPlugin.reloadAnnotations()
         }
@@ -66,19 +66,6 @@ final class ViewController: NSViewController {
             location: textView.textLayoutManager.location(textView.textLayoutManager.documentRange.location, offsetBy: 56)!
         )
 
-        annotations += [annotation1, annotation2]
-    }
-}
-
-extension ViewController: STAnnotationsDataSource {
-
-    var textViewAnnotations: [any STLineAnnotation] {
-        get {
-            annotations
-        }
-
-        set {
-            annotations = newValue
-        }
+        textViewAnnotations += [annotation1, annotation2]
     }
 }
