@@ -86,7 +86,7 @@ private struct AnnotationLabelStyle: LabelStyle {
     }
 }
 
-private extension AnnotationKind {
+private extension STMessageLineAnnotation.AnnotationKind {
     var color: Color {
         switch self {
         case .info:

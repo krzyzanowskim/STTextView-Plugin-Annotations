@@ -6,13 +6,14 @@ import AppKit
 import UIKit
 #endif
 
-public enum AnnotationKind {
-    case info
-    case warning
-    case error
-}
-
 open class STMessageLineAnnotation: STLineAnnotation {
+
+    public enum AnnotationKind {
+        case info
+        case warning
+        case error
+    }
+
     open var id: String
     open var location: NSTextLocation
     public let message: AttributedString
