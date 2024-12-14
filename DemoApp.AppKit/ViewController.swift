@@ -4,7 +4,7 @@ import STTextView
 
 import STAnnotationsPlugin
 
-final class EditorViewController: NSViewController {
+final class ViewController: NSViewController {
 
     @ViewLoading
     private var annotationsPlugin: STAnnotationsPlugin
@@ -68,7 +68,7 @@ final class EditorViewController: NSViewController {
     }
 }
 
-extension EditorViewController: STAnnotationsDataSource {
+extension ViewController: STAnnotationsDataSource {
 
 //    func textView(_ textView: STTextView, viewForLineAnnotation lineAnnotation: any STLineAnnotation, textLineFragment: NSTextLineFragment, proposedViewFrame: CGRect) -> NSView? {
 //        guard let lineAnnotation = lineAnnotation as? STMessageLineAnnotation else {
