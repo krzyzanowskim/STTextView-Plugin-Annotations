@@ -9,13 +9,15 @@ public struct STAnnotationLabelView: View {
     @Environment(\.colorScheme) private var colorScheme
 
     private let text: Text
-    private let annotation: STMessageLineAnnotation
-    private let action: (STMessageLineAnnotation) -> Void
+    private let annotation: any STLineAnnotation
+    private let action: (any STLineAnnotation) -> Void
+    private let color: Color
 
-    public init(_ text: Text, annotation: STMessageLineAnnotation, action: @escaping (any STLineAnnotation) -> Void) {
+    public init(_ text: Text, annotation: any STLineAnnotation, color: Color, action: @escaping (any STLineAnnotation) -> Void) {
         self.text = text
         self.action = action
         self.annotation = annotation
+        self.color = color
     }
 
     public var body: some View {
@@ -37,7 +39,7 @@ public struct STAnnotationLabelView: View {
                     Image(systemName: "xmark.octagon")
                         .foregroundStyle(.white)
                 }
-                .shadow(color: annotation.kind.color, radius: 1)
+                .shadow(color: color, radius: 1)
             }
             .buttonStyle(.plain)
         }
@@ -47,11 +49,11 @@ public struct STAnnotationLabelView: View {
         .background(
             ZStack {
                 ContainerRelativeShape()
-                    .fill(annotation.kind.color)
+                    .fill(color)
                     .background(.background)
 
                 ContainerRelativeShape()
-                    .stroke(annotation.kind.color)
+                    .stroke(color)
             }
         )
         .containerShape(
@@ -84,18 +86,4 @@ private struct AnnotationLabelStyle: LabelStyle {
                 .textSelection(.enabled)
         }
     }
-}
-
-private extension STMessageLineAnnotation.AnnotationKind {
-    var color: Color {
-        switch self {
-        case .info:
-            Color.accentColor.opacity(0.2)
-        case .warning:
-            Color.yellow.opacity(0.2)
-        case .error:
-            Color.red.opacity(0.2)
-        }
-    }
-
 }
