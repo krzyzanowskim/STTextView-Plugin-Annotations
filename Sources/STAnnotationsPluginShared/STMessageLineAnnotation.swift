@@ -12,7 +12,7 @@ public enum AnnotationKind {
     case error
 }
 
-open class MessageLineAnnotation: NSObject, STLineAnnotation {
+open class STMessageLineAnnotation: NSObject, STLineAnnotation {
     open var location: NSTextLocation
     public let message: AttributedString
     public let kind: AnnotationKind

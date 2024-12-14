@@ -10,11 +10,11 @@ struct AnnotationLabelView : View {
     @Environment(\.colorScheme) private var colorScheme
     
     private let text: Text
-    private let annotation: MessageLineAnnotation
+    private let annotation: STMessageLineAnnotation
     private let textWidth: CGFloat
     private let textHeight: CGFloat
     
-    init(_ text: Text, annotation: MessageLineAnnotation, textWidth: CGFloat, textHeight: CGFloat) {
+    init(_ text: Text, annotation: STMessageLineAnnotation, textWidth: CGFloat, textHeight: CGFloat) {
         self.text = text
         self.annotation = annotation
         self.textWidth = textWidth

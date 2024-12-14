@@ -10,10 +10,10 @@ struct AnnotationLabelView : View {
     @Environment(\.colorScheme) private var colorScheme
 
     private let text: Text
-    private let annotation: MessageLineAnnotation
-    private let action: (MessageLineAnnotation) -> Void
+    private let annotation: STMessageLineAnnotation
+    private let action: (STMessageLineAnnotation) -> Void
 
-    init(_ text: Text, annotation: MessageLineAnnotation, action: @escaping (MessageLineAnnotation) -> Void) {
+    init(_ text: Text, annotation: STMessageLineAnnotation, action: @escaping (STMessageLineAnnotation) -> Void) {
         self.text = text
         self.action = action
         self.annotation = annotation
