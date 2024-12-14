@@ -35,7 +35,7 @@ final class ViewController: NSViewController, STAnnotationsDataSource {
         )
 
         textView.backgroundColor = .controlBackgroundColor
-        textView.font = .monospacedSystemFont(ofSize: 0, weight: .regular)
+        textView.font = .monospacedSystemFont(ofSize: 14, weight: .regular)
 
         let defaultParagraphStyle = NSParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
         defaultParagraphStyle.lineHeightMultiple = 1.2

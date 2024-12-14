@@ -31,10 +31,11 @@ class ViewController: UIViewController, STAnnotationsDataSource {
         textView.defaultParagraphStyle = defaultParagraphStyle
         textView.highlightSelectedLine = true
 
-        textView.font = UIFont.monospacedSystemFont(ofSize: 0, weight: .regular)
+        textView.font = UIFont.monospacedSystemFont(ofSize: 14, weight: .regular)
         textView.showsLineNumbers = false
 
         textView.text = """
+        
         import Foundation
         
         func main() {
