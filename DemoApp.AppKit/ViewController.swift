@@ -41,9 +41,10 @@ final class ViewController: NSViewController, STAnnotationsDataSource {
         defaultParagraphStyle.lineHeightMultiple = 1.2
 
         textView.defaultParagraphStyle = defaultParagraphStyle
-        textView.highlightSelectedLine = true
+        textView.highlightSelectedLine = false
 
         textView.text = """
+        
         import Foundation
 
         func main() {
