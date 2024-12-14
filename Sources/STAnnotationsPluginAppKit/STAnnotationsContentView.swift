@@ -1,6 +1,6 @@
 import AppKit
 
-final class AnnotationsContentView: NSView {
+final class STAnnotationsContentView: NSView {
 
     override var canBecomeKeyView: Bool {
         false

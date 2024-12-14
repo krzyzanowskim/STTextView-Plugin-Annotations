@@ -8,14 +8,14 @@ public class STAnnotationsPlugin: STPlugin {
     private var reloadDataHandler: (() -> Void)?
 
     // Annotations surface view. Add annotations to this view.
-    private var annotationsContentView: AnnotationsContentView!
+    private var annotationsContentView: STAnnotationsContentView!
 
     public init(dataSource: STAnnotationsDataSource) {
         self.dataSource = dataSource
     }
 
     public func setUp(context: any Context) {
-        self.annotationsContentView = AnnotationsContentView(frame: context.textView.frame)
+        self.annotationsContentView = STAnnotationsContentView(frame: context.textView.frame)
 //        annotationsContentView.wantsLayer = true
         annotationsContentView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         context.textView.addSubview(annotationsContentView)

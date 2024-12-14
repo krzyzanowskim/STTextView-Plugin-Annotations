@@ -1,6 +1,6 @@
 import UIKit
 
-final class AnnotationsContentView: UIView {
+final class STAnnotationsContentView: UIView {
 
     override var canBecomeFocused: Bool {
         false
