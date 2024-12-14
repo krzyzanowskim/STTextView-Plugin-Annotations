@@ -10,18 +10,11 @@ import STAnnotationsPlugin
 class AnnotationDataSource: STAnnotationsDataSource {
 
     // Optional. Default implementation provided.
-    func textView(_ textView: STTextView, viewForLineAnnotation lineAnnotation: any STLineAnnotation, textLineFragment: NSTextLineFragment, proposedViewFrame: CGRect) -> NSView? {
-        // view for annotation
-    }
+    // func textView(_ textView: STTextView, viewForLineAnnotation lineAnnotation: any STLineAnnotation, textLineFragment: NSTextLineFragment, proposedViewFrame: CGRect) -> NSView? {
+    //    // view for annotation
+    // }
 
-    var textViewAnnotations: [any STLineAnnotation] {
-        get {
-            //
-        }
-        set {
-            //
-        }
-    }
+    var textViewAnnotations: [any STLineAnnotation] = []
 }
 
 let dataSource = AnnotationDataSource()
