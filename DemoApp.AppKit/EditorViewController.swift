@@ -5,8 +5,12 @@ import STAnnotationsPlugin
 
 final class EditorViewController: NSViewController {
 
-    private var annotationsPlugin: STAnnotationsPlugin!
-    private var textView: STTextView!
+    @ViewLoading
+    private var annotationsPlugin: STAnnotationsPlugin
+
+    @ViewLoading
+    private var textView: STTextView
+
     private var annotations: [STMessageLineAnnotation] = [] {
         didSet {
             annotationsPlugin.reloadAnnotations()
@@ -15,7 +19,7 @@ final class EditorViewController: NSViewController {
 
     override func loadView() {
         let scrollView = STTextView.scrollableTextView()
-        self.textView = scrollView.documentView as? STTextView
+        self.textView = scrollView.documentView as! STTextView
         self.view = scrollView
     }
 

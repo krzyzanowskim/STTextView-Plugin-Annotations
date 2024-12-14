@@ -8,9 +8,11 @@ import STAnnotationsPluginShared
 class ViewController: UIViewController {
     
     @ViewLoading
-    private var textView: STTextView!
+    private var textView: STTextView
     
-    private var annotationsPlugin: STAnnotationsPlugin!
+    @ViewLoading
+    private var annotationsPlugin: STAnnotationsPlugin
+    
     private var annotations: [STMessageLineAnnotation] = [] {
         didSet {
             annotationsPlugin.reloadAnnotations()
