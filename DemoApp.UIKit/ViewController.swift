@@ -13,7 +13,7 @@ class ViewController: UIViewController {
     @ViewLoading
     private var annotationsPlugin: STAnnotationsPlugin
     
-    private var annotations: [STMessageLineAnnotation] = [] {
+    private var annotations: [any STLineAnnotation] = [] {
         didSet {
             annotationsPlugin.reloadAnnotations()
         }
@@ -59,12 +59,14 @@ class ViewController: UIViewController {
         
         // add annotation
         let annotation1 = try! STMessageLineAnnotation(
+            id: UUID().uuidString,
             message: AttributedString(markdown: "Swift Foundation framework"),
             kind: .info,
             location: textView.textLayoutManager.location(textView.textLayoutManager.documentRange.location, offsetBy: 17)!
         )
         
         let annotation2 = try! STMessageLineAnnotation(
+            id: UUID().uuidString,
             message: AttributedString(markdown: "**ERROR**: Missing \" at the end of the string literal"),
             kind: .error,
             location: textView.textLayoutManager.location(textView.textLayoutManager.documentRange.location, offsetBy: 56)!
@@ -102,7 +104,13 @@ extension ViewController: STTextViewDelegate {
 
 extension ViewController: STAnnotationsDataSource {
     
-    func textViewAnnotations() -> [any STLineAnnotation] {
-        annotations
+    var textViewAnnotations: [any STLineAnnotation] {
+        get {
+            annotations
+        }
+
+        set {
+            annotations = newValue
+        }
     }
 }

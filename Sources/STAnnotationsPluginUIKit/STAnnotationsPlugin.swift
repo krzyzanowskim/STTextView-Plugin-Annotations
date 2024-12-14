@@ -49,7 +49,7 @@ public class STAnnotationsPlugin: STPlugin {
         let replacementCount = replacementString.utf16.count
         let deltaCount = replacementCount - affectedCount
 
-        for var annotation in dataSource?.textViewAnnotations() ?? [] where context.textView.textContentManager.offset(from: affectedRange.endLocation, to: annotation.location) >= 0 {
+        for var annotation in dataSource?.textViewAnnotations ?? [] where context.textView.textContentManager.offset(from: affectedRange.endLocation, to: annotation.location) >= 0 {
             annotation.location = context.textView.textContentManager.location(annotation.location, offsetBy: deltaCount) ?? annotation.location
         }
 
@@ -95,7 +95,7 @@ extension STAnnotationsPlugin {
             // Add views for annotations
             var annotationViews: [UIView] = []
             let textLayoutManager = context.textView.textLayoutManager
-            for annotation in dataSource.textViewAnnotations() {
+            for annotation in dataSource.textViewAnnotations {
                 textLayoutManager.ensureLayout(for: NSTextRange(location: annotation.location))
                 if let textLayoutFragment = textLayoutManager.textLayoutFragment(for: annotation.location),
                     let textLineFragment = textLayoutFragment.textLineFragment(at: annotation.location) {

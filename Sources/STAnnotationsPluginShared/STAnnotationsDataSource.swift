@@ -22,5 +22,5 @@ public protocol STAnnotationsDataSource: AnyObject {
     /// Annotations.
     ///
     /// Call `reloadData()` to notify STTextView about changes to annotations returned by this method.
-    func textViewAnnotations() -> [any STLineAnnotation]
+    var textViewAnnotations: [any STLineAnnotation] { get set }
 }

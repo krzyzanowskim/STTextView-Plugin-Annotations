@@ -5,6 +5,7 @@ import AppKit
 import UIKit
 #endif
 
-public protocol STLineAnnotation: Identifiable {
+public protocol STLineAnnotation {
+    var id: String { get }
     var location: any NSTextLocation { get set }
 }

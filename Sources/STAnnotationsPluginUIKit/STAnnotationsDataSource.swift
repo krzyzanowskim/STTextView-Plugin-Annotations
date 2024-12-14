@@ -13,9 +13,9 @@ public extension STAnnotationsDataSource {
         }
 
         return STAnnotationView(frame: proposedViewFrame) {
-            STAnnotationLabelView(Text(lineAnnotation.message), annotation: lineAnnotation) { annotation in
+            STAnnotationLabelView(Text(lineAnnotation.message), annotation: lineAnnotation) { [weak self] annotation in
                 // Remove annotation
-                // self?.annotations.removeAll(where: { $0.id == annotation.id })
+                self?.textViewAnnotations.removeAll(where: { $0.id == annotation.id })
             }
             .font(.body)
         }

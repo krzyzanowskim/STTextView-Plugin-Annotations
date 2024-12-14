@@ -12,7 +12,7 @@ final class ViewController: NSViewController {
     @ViewLoading
     private var textView: STTextView
 
-    private var annotations: [STMessageLineAnnotation] = [] {
+    private var annotations: [any STLineAnnotation] = [] {
         didSet {
             annotationsPlugin.reloadAnnotations()
         }
@@ -53,12 +53,14 @@ final class ViewController: NSViewController {
 
         // add annotation
         let annotation1 = try! STMessageLineAnnotation(
+            id: UUID().uuidString,
             message: AttributedString(markdown: "Swift Foundation framework"),
             kind: .info,
             location: textView.textLayoutManager.location(textView.textLayoutManager.documentRange.location, offsetBy: 17)!
         )
 
         let annotation2 = try! STMessageLineAnnotation(
+            id: UUID().uuidString,
             message: AttributedString(markdown: "**ERROR**: Missing \" at the end of the string literal"),
             kind: .error,
             location: textView.textLayoutManager.location(textView.textLayoutManager.documentRange.location, offsetBy: 56)!
@@ -70,23 +72,13 @@ final class ViewController: NSViewController {
 
 extension ViewController: STAnnotationsDataSource {
 
-//    func textView(_ textView: STTextView, viewForLineAnnotation lineAnnotation: any STLineAnnotation, textLineFragment: NSTextLineFragment, proposedViewFrame: CGRect) -> NSView? {
-//        guard let lineAnnotation = lineAnnotation as? STMessageLineAnnotation else {
-//            assertionFailure()
-//            return nil
-//        }
-//
-//        return STAnnotationView(frame: proposedViewFrame) {
-//            STAnnotationLabelView(Text(lineAnnotation.message), annotation: lineAnnotation) { [weak self] annotation in
-//                // Remove annotation
-//                self?.annotations.removeAll(where: { $0.id == annotation.id })
-//            }
-//            .font(.body)
-//        }
-//    }
+    var textViewAnnotations: [any STLineAnnotation] {
+        get {
+            annotations
+        }
 
-
-    func textViewAnnotations() -> [any STLineAnnotation] {
-        self.annotations
+        set {
+            annotations = newValue
+        }
     }
 }

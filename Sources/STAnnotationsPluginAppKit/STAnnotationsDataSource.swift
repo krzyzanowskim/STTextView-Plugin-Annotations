@@ -3,7 +3,7 @@ import SwiftUI
 import STTextView
 import STAnnotationsPluginShared
 
-public extension STAnnotationsDataSource {
+public extension STAnnotationsDataSource where Self: AnyObject {
 
     /// Default implementation
     func textView(_ textView: STTextView, viewForLineAnnotation lineAnnotation: any STLineAnnotation, textLineFragment: NSTextLineFragment, proposedViewFrame: CGRect) -> NSView? {
@@ -13,9 +13,8 @@ public extension STAnnotationsDataSource {
         }
 
         return STAnnotationView(frame: proposedViewFrame) {
-            STAnnotationLabelView(Text(lineAnnotation.message), annotation: lineAnnotation) { annotation in
-                // Remove annotation
-                // self?.annotations.removeAll(where: { $0.id == annotation.id })
+            STAnnotationLabelView(Text(lineAnnotation.message), annotation: lineAnnotation) { [weak self] lineAnnotation in
+                self?.textViewAnnotations.removeAll(where: { $0.id == lineAnnotation.id })
             }
             .font(.body)
         }

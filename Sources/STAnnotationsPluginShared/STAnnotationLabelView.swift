@@ -12,7 +12,7 @@ public struct STAnnotationLabelView: View {
     private let annotation: STMessageLineAnnotation
     private let action: (STMessageLineAnnotation) -> Void
 
-    public init(_ text: Text, annotation: STMessageLineAnnotation, action: @escaping (STMessageLineAnnotation) -> Void) {
+    public init(_ text: Text, annotation: STMessageLineAnnotation, action: @escaping (any STLineAnnotation) -> Void) {
         self.text = text
         self.action = action
         self.annotation = annotation
