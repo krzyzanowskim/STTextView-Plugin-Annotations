@@ -18,16 +18,22 @@ public class STAnnotationsPlugin: STPlugin {
 
     public func setUp(context: any Context) {
         self.annotationsContentView = STAnnotationsContentView(frame: context.textView.frame)
-        annotationsContentView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
+        annotationsContentView.translatesAutoresizingMaskIntoConstraints = false
         context.textView.addSubview(annotationsContentView)
+
+        NSLayoutConstraint.activate([
+            annotationsContentView.topAnchor.constraint(equalTo: context.textView.topAnchor),
+            annotationsContentView.widthAnchor.constraint(equalTo: context.textView.widthAnchor),
+            annotationsContentView.heightAnchor.constraint(equalTo: context.textView.heightAnchor)
+        ])
 
         context.events.onDidChangeText { [weak self] affectedRange, replacementString in
             self?.didChangeText(context: context, in: affectedRange, replacementString: replacementString)
         }
 
         context.events.onDidLayoutViewport { [weak self] range in
-            self?.annotationsContentView.frame = context.textView.frame
-            self?.didLayoutViewport(context: context, range)
+            guard let self else { return }
+            didLayoutViewport(context: context, range)
         }
 
         reloadDataHandler = {
@@ -106,10 +112,10 @@ extension STAnnotationsPlugin {
                     // Calculate proposed annotation view frame
                     let segmentFrame = context.textView.textLayoutManager.textSegmentFrame(at: annotation.location, type: .standard, options: [.upstreamAffinity])!
                     let proposedFrame = CGRect(
-                        x: textLineFragment.typographicBounds.width + 75,
-                        y: lineFragmentFrame.origin.y - segmentFrame.height - (textLineFragment.typographicBounds.height * 0.65),
+                        x: segmentFrame.maxX + 1.4,
+                        y: lineFragmentFrame.origin.y + textLineFragment.typographicBounds.minY,
                         width: context.textView.textInputView.frame.width - textLineFragment.typographicBounds.width,
-                        height: textLineFragment.typographicBounds.height
+                        height: lineFragmentFrame.height
                     ).pixelAligned
 
                     if let annotationView = dataSource.textView(context.textView, viewForLineAnnotation: annotation, textLineFragment: textLineFragment, proposedViewFrame: proposedFrame) {

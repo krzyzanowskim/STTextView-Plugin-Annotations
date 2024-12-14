@@ -21,18 +21,19 @@ class ViewController: UIViewController, STAnnotationsDataSource {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         let textView = STTextView()
-        
         textView.translatesAutoresizingMaskIntoConstraints = false
+
+        let defaultParagraphStyle = NSParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
+        defaultParagraphStyle.lineHeightMultiple = 1.2
+
+        textView.defaultParagraphStyle = defaultParagraphStyle
         textView.highlightSelectedLine = true
-        textView.textDelegate = self
-        
+
         textView.font = UIFont.monospacedSystemFont(ofSize: 0, weight: .regular)
-        textView.showsLineNumbers = true
-        textView.showsInvisibleCharacters = false
-        textView.gutterView?.drawSeparator = true
-        
+        textView.showsLineNumbers = false
+
         textView.text = """
         import Foundation
         
@@ -75,29 +76,4 @@ class ViewController: UIViewController, STAnnotationsDataSource {
         textViewAnnotations += [annotation1, annotation2]
     }
     
-}
-
-extension ViewController: STTextViewDelegate {
-    func textViewWillChangeText(_ notification: Notification) {
-    }
-    
-    func textViewDidChangeText(_ notification: Notification) {
-    }
-    
-    func textViewDidChangeSelection(_ notification: Notification) {
-    }
-    
-    func textView(_ textView: STTextView, shouldChangeTextIn affectedCharRange: NSTextRange, replacementString: String?) -> Bool {
-        true
-    }
-    
-    func textView(_ textView: STTextView, willChangeTextIn affectedCharRange: NSTextRange, replacementString: String) {
-    }
-    
-    func textView(_ textView: STTextView, didChangeTextIn affectedCharRange: NSTextRange, replacementString: String) {
-    }
-    
-    func textView(_ textView: STTextView, clickedOnLink link: Any, at location: any NSTextLocation) -> Bool {
-        false
-    }
 }
