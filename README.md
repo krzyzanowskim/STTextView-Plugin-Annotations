@@ -26,6 +26,7 @@ let plugin = STAnnotationsPlugin(dataSource: dataSource)
 textView.addPlugin(plugin)
 ```
 
-Check DemoApp for a reference implementation.
+Check the Demo application (AppKit or UIKit) for a reference implementation.
 
-![Screenshot 2024-02-05 at 02 23 26](https://github.com/krzyzanowskim/STTextView-Plugin-Annotations/assets/758033/9f77d1ea-097d-4325-b8ab-dac1da9a8ad1)
+![Untitled](https://github.com/user-attachments/assets/c29fb7c2-5417-4487-a67a-4e7e20758b73)
+
