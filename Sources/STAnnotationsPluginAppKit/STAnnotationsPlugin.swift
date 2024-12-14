@@ -1,4 +1,5 @@
 import Cocoa
+import SwiftUI
 import STTextView
 import STAnnotationsPluginShared
 
@@ -140,3 +141,5 @@ private extension CGRect {
     }
 
 }
+
+

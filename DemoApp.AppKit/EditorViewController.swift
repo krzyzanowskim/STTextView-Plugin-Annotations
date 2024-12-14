@@ -1,4 +1,5 @@
 import AppKit
+import SwiftUI
 import STTextView
 
 import STAnnotationsPlugin
@@ -67,27 +68,25 @@ final class EditorViewController: NSViewController {
     }
 }
 
-import SwiftUI
-
 extension EditorViewController: STAnnotationsDataSource {
 
-    func textView(_ textView: STTextView, viewForLineAnnotation lineAnnotation: any STLineAnnotation, textLineFragment: NSTextLineFragment, proposedViewFrame: CGRect) -> NSView? {
-        guard let lineAnnotation = lineAnnotation as? STMessageLineAnnotation else {
-            assertionFailure()
-            return nil
-        }
-
-        return STAnnotationView(frame: proposedViewFrame) {
-            STAnnotationLabelView(Text(lineAnnotation.message), annotation: lineAnnotation) { [weak self] annotation in
-                // Remove annotation
-                self?.annotations.removeAll(where: { $0.id == annotation.id })
-            }
-            .font(.body)
-        }
-    }
+//    func textView(_ textView: STTextView, viewForLineAnnotation lineAnnotation: any STLineAnnotation, textLineFragment: NSTextLineFragment, proposedViewFrame: CGRect) -> NSView? {
+//        guard let lineAnnotation = lineAnnotation as? STMessageLineAnnotation else {
+//            assertionFailure()
+//            return nil
+//        }
+//
+//        return STAnnotationView(frame: proposedViewFrame) {
+//            STAnnotationLabelView(Text(lineAnnotation.message), annotation: lineAnnotation) { [weak self] annotation in
+//                // Remove annotation
+//                self?.annotations.removeAll(where: { $0.id == annotation.id })
+//            }
+//            .font(.body)
+//        }
+//    }
 
 
     func textViewAnnotations() -> [any STLineAnnotation] {
-        annotations
+        self.annotations
     }
 }
