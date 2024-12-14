@@ -48,7 +48,15 @@
 		3E8504B12C991A98004DC5CC = {
 			isa = PBXGroup;
 			children = (
-				3E8504BC2C991A98004DC5CC /* DemoApp.UIKit */,
+				3EB326C52C991D3C00F5C862 /* View */,
+				3EB326C12C991CAD00F5C862 /* Model */,
+				3E8504BD2C991A98004DC5CC /* AppDelegate.swift */,
+				3E8504BF2C991A98004DC5CC /* SceneDelegate.swift */,
+				3E8504C12C991A98004DC5CC /* ViewController.swift */,
+				3E8504C32C991A98004DC5CC /* Main.storyboard */,
+				3E8504C62C991A99004DC5CC /* Assets.xcassets */,
+				3E8504C82C991A99004DC5CC /* LaunchScreen.storyboard */,
+				3E8504CB2C991A99004DC5CC /* Info.plist */,
 				3E8504BB2C991A98004DC5CC /* Products */,
 			);
 			sourceTree = "<group>";
@@ -59,22 +67,6 @@
 				3E8504BA2C991A98004DC5CC /* DemoApp.UIKit.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		3E8504BC2C991A98004DC5CC /* DemoApp.UIKit */ = {
-			isa = PBXGroup;
-			children = (
-				3EB326C52C991D3C00F5C862 /* View */,
-				3EB326C12C991CAD00F5C862 /* Model */,
-				3E8504BD2C991A98004DC5CC /* AppDelegate.swift */,
-				3E8504BF2C991A98004DC5CC /* SceneDelegate.swift */,
-				3E8504C12C991A98004DC5CC /* ViewController.swift */,
-				3E8504C32C991A98004DC5CC /* Main.storyboard */,
-				3E8504C62C991A99004DC5CC /* Assets.xcassets */,
-				3E8504C82C991A99004DC5CC /* LaunchScreen.storyboard */,
-				3E8504CB2C991A99004DC5CC /* Info.plist */,
-			);
-			path = DemoApp.UIKit;
 			sourceTree = "<group>";
 		};
 		3EB326C52C991D3C00F5C862 /* View */ = {
@@ -320,9 +312,9 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = QT93JJ48BC;
+				DEVELOPMENT_TEAM = 67RAULRX93;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = DemoApp.UIKit/Info.plist;
+				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -353,9 +345,9 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = QT93JJ48BC;
+				DEVELOPMENT_TEAM = 67RAULRX93;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = DemoApp.UIKit/Info.plist;
+				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
