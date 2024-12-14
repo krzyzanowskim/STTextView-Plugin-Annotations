@@ -17,7 +17,6 @@ public class STAnnotationsPlugin: STPlugin {
 
     public func setUp(context: any Context) {
         self.annotationsContentView = STAnnotationsContentView(frame: context.textView.frame)
-//        annotationsContentView.wantsLayer = true
         annotationsContentView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         context.textView.addSubview(annotationsContentView)
 

@@ -9,7 +9,6 @@ import AppKit
 import UIKit
 #endif
 
-
 public protocol STAnnotationsDataSource: AnyObject {
 
     /// View for annotation.

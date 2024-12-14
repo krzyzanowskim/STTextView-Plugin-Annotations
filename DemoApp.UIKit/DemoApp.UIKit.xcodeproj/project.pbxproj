@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -29,10 +29,6 @@
 		3EB326C62C991D4900F5C862 /* AnnotationLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationLabelView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		3EB326C12C991CAD00F5C862 /* Model */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Model; sourceTree = "<group>"; };
-/* End PBXFileSystemSynchronizedRootGroup section */
-
 /* Begin PBXFrameworksBuildPhase section */
 		3E8504B72C991A98004DC5CC /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -49,7 +45,6 @@
 			isa = PBXGroup;
 			children = (
 				3EB326C52C991D3C00F5C862 /* View */,
-				3EB326C12C991CAD00F5C862 /* Model */,
 				3E8504BD2C991A98004DC5CC /* AppDelegate.swift */,
 				3E8504BF2C991A98004DC5CC /* SceneDelegate.swift */,
 				3E8504C12C991A98004DC5CC /* ViewController.swift */,
@@ -91,9 +86,6 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				3EB326C12C991CAD00F5C862 /* Model */,
 			);
 			name = DemoApp.UIKit;
 			packageProductDependencies = (
