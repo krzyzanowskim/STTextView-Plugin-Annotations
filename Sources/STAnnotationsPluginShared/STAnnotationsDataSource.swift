@@ -3,18 +3,22 @@ import STTextView
 
 #if os(macOS)
 import AppKit
-public typealias View = NSView
 #endif
+
 #if os(iOS) || targetEnvironment(macCatalyst)
 import UIKit
-public typealias View = UIView
 #endif
 
 
 public protocol STAnnotationsDataSource: AnyObject {
 
     /// View for annotation.
-    func textView(_ textView: STTextView, viewForLineAnnotation lineAnnotation: any STLineAnnotation, textLineFragment: NSTextLineFragment, proposedViewFrame: CGRect) -> View?
+#if os(macOS)
+    func textView(_ textView: STTextView, viewForLineAnnotation lineAnnotation: any STLineAnnotation, textLineFragment: NSTextLineFragment, proposedViewFrame: CGRect) -> NSView?
+#endif
+#if os(iOS) || targetEnvironment(macCatalyst)
+    func textView(_ textView: STTextView, viewForLineAnnotation lineAnnotation: any STLineAnnotation, textLineFragment: NSTextLineFragment, proposedViewFrame: CGRect) -> UIView?
+#endif
 
     /// Annotations.
     ///

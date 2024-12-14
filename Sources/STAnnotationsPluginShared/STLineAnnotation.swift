@@ -6,5 +6,5 @@ import UIKit
 #endif
 
 public protocol STLineAnnotation: Identifiable {
-    var location: NSTextLocation { get set }
+    var location: any NSTextLocation { get set }
 }
