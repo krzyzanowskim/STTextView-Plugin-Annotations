@@ -2,7 +2,7 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:DemoApp/DemoApp.xcodeproj">
+      location = "group:DemoApp/DemoApp.AppKit.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:DemoApp.UIKit/DemoApp.UIKit.xcodeproj">
