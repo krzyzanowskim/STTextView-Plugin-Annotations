@@ -4,40 +4,42 @@
 import SwiftUI
 import Foundation
 import STTextView
-import STAnnotationsPlugin
 
-struct AnnotationLabelView : View {
+public struct STAnnotationLabelView: View {
     @Environment(\.colorScheme) private var colorScheme
-    
+
     private let text: Text
     private let annotation: STMessageLineAnnotation
-    private let textWidth: CGFloat
-    private let textHeight: CGFloat
-    
-    init(_ text: Text, annotation: STMessageLineAnnotation, textWidth: CGFloat, textHeight: CGFloat) {
+    private let action: (STMessageLineAnnotation) -> Void
+
+    public init(_ text: Text, annotation: STMessageLineAnnotation, action: @escaping (STMessageLineAnnotation) -> Void) {
         self.text = text
+        self.action = action
         self.annotation = annotation
-        self.textWidth = textWidth
-        self.textHeight = textHeight
     }
-    
-    var body: some View {
+
+    public var body: some View {
         Label {
             text
                 .foregroundColor(.primary)
-                .frame(minWidth: textWidth, maxWidth: .infinity, alignment: .leading)
+                .frame(maxWidth: .infinity, alignment: .leading)
         } icon: {
-            ZStack {
-                // the way it draws bothers me
-                // https://twitter.com/krzyzanowskim/status/1527723492002643969
-                Image(systemName: "octagon")
-                    .symbolVariant(.fill)
-                    .foregroundStyle(.red)
-                
-                Image(systemName: "xmark.octagon")
-                    .foregroundStyle(.white)
+            Button {
+                action(annotation)
+            } label: {
+                ZStack {
+                    // the way it draws bothers me
+                    // https://twitter.com/krzyzanowskim/status/1527723492002643969
+                    Image(systemName: "octagon")
+                        .symbolVariant(.fill)
+                        .foregroundStyle(.red)
+
+                    Image(systemName: "xmark.octagon")
+                        .foregroundStyle(.white)
+                }
+                .shadow(color: annotation.kind.color, radius: 1)
             }
-            .shadow(color: annotation.kind.color, radius: 1)
+            .buttonStyle(.plain)
         }
         .labelStyle(
             AnnotationLabelStyle()
@@ -47,36 +49,33 @@ struct AnnotationLabelView : View {
                 ContainerRelativeShape()
                     .fill(annotation.kind.color)
                     .background(.background)
-                
+
                 ContainerRelativeShape()
                     .stroke(annotation.kind.color)
             }
         )
         .containerShape(
-            UnevenRoundedRectangle(
-                cornerRadii: RectangleCornerRadii(topLeading: 2, bottomLeading: 2),
-                style: .circular
-            )
+            RoundedRectangle(cornerRadius: 2, style: .circular)
         )
     }
 }
 
 private struct AnnotationLabelStyle: LabelStyle {
     @Environment(\.colorScheme) private var colorScheme
-    
+
     func makeBody(configuration: Configuration) -> some View {
         HStack(alignment: .center, spacing: 0) {
             configuration.icon
                 .padding(.horizontal, 4)
                 .controlSize(.large)
                 .contentShape(Rectangle())
-            
+
             Rectangle()
                 .foregroundStyle(.background)
                 .frame(width: 1)
                 .frame(maxHeight: .infinity)
                 .padding(.vertical, 0.5)
-            
+
             configuration.title
                 .padding(.leading, 4)
                 .padding(.trailing, 16)
@@ -98,5 +97,5 @@ private extension AnnotationKind {
             Color.red.opacity(0.2)
         }
     }
-    
+
 }

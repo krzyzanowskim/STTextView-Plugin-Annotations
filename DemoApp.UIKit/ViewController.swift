@@ -3,6 +3,7 @@ import UIKit
 
 import STTextView
 import STAnnotationsPlugin
+import STAnnotationsPluginShared
 
 class ViewController: UIViewController {
     
@@ -105,8 +106,11 @@ extension ViewController: STAnnotationsDataSource {
         }
         
         return STAnnotationView(frame: proposedViewFrame) {
-            AnnotationLabelView(Text(lineAnnotation.message), annotation: lineAnnotation, textWidth: proposedViewFrame.width, textHeight: proposedViewFrame.height)
-                .font(.body)
+            STAnnotationLabelView(Text(lineAnnotation.message), annotation: lineAnnotation) { annotation in
+                // Remove annotation
+                self.annotations.removeAll(where: { $0.id == annotation.id })
+            }
+            .font(.body)
         }
     }
     
