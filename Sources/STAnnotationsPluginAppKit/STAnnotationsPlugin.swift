@@ -1,5 +1,6 @@
 import Cocoa
 import STTextView
+import STAnnotationsPluginShared
 
 public class STAnnotationsPlugin: STPlugin {
 

@@ -1,5 +1,6 @@
 import UIKit
 import STTextView
+import STAnnotationsPluginShared
 
 public class STAnnotationsPlugin: STPlugin {
 

@@ -23,14 +23,22 @@ let package = Package(
             ]
         ),
         .target(
+            name: "STAnnotationsPluginShared",
+            dependencies: [
+                .product(name: "STTextView", package: "STTextView")
+            ]
+        ),
+        .target(
             name: "STAnnotationsPluginAppKit",
             dependencies: [
+                .target(name: "STAnnotationsPluginShared"),
                 .product(name: "STTextView", package: "STTextView")
             ]
         ),
         .target(
             name: "STAnnotationsPluginUIKit",
             dependencies: [
+                .target(name: "STAnnotationsPluginShared"),
                 .product(name: "STTextView", package: "STTextView")
             ]
         )
