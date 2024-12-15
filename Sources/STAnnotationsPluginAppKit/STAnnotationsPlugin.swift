@@ -98,6 +98,7 @@ extension STAnnotationsPlugin {
             let textLayoutManager = context.textView.textLayoutManager
             for annotation in dataSource.textViewAnnotations {
                 textLayoutManager.ensureLayout(for: NSTextRange(location: annotation.location))
+                // textLayoutFragment is in the textView.contentFrame coordinates
                 if let textLayoutFragment = textLayoutManager.textLayoutFragment(for: annotation.location),
                     let textLineFragment = textLayoutFragment.textLineFragment(at: annotation.location) {
 
@@ -107,8 +108,8 @@ extension STAnnotationsPlugin {
                     // Calculate proposed annotation view frame
                     let segmentFrame = context.textView.textLayoutManager.textSegmentFrame(at: annotation.location, type: .standard, options: [.upstreamAffinity])!
                     let proposedFrame = CGRect(
-                        x: lineFragmentFrame.maxX + 2,
-                        y: lineFragmentFrame.origin.y + textLineFragment.typographicBounds.minY,
+                        x: context.textView.contentFrame.origin.x + lineFragmentFrame.maxX + 2,
+                        y: context.textView.contentFrame.origin.y + lineFragmentFrame.origin.y + textLineFragment.typographicBounds.minY,
                         width: context.textView.visibleRect.maxX - segmentFrame.maxX,
                         height: lineFragmentFrame.height
                     ).pixelAligned
@@ -116,6 +117,8 @@ extension STAnnotationsPlugin {
                     if let annotationView = dataSource.textView(context.textView, viewForLineAnnotation: annotation, textLineFragment: textLineFragment, proposedViewFrame: proposedFrame) {
                         annotationViews.append(annotationView)
                     }
+                } else {
+                    assertionFailure("No fragment for location \(annotation.location)?")
                 }
             }
 

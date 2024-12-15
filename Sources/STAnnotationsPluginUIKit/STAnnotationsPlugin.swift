@@ -112,8 +112,8 @@ extension STAnnotationsPlugin {
                     // Calculate proposed annotation view frame
                     let segmentFrame = context.textView.textLayoutManager.textSegmentFrame(at: annotation.location, type: .standard, options: [.upstreamAffinity])!
                     let proposedFrame = CGRect(
-                        x: lineFragmentFrame.maxX + 2,
-                        y: lineFragmentFrame.origin.y + textLineFragment.typographicBounds.minY,
+                        x: context.textView.contentFrame.origin.x + lineFragmentFrame.maxX + 2,
+                        y: context.textView.contentFrame.origin.y + lineFragmentFrame.origin.y + textLineFragment.typographicBounds.minY,
                         width: context.textView.textInputView.frame.maxX - segmentFrame.maxX,
                         height: lineFragmentFrame.height
                     ).pixelAligned

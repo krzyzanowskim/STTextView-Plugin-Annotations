@@ -29,10 +29,10 @@ class ViewController: UIViewController, STAnnotationsDataSource {
         defaultParagraphStyle.lineHeightMultiple = 1.2
 
         textView.defaultParagraphStyle = defaultParagraphStyle
-        textView.highlightSelectedLine = false
 
         textView.font = UIFont.monospacedSystemFont(ofSize: 14, weight: .regular)
-        textView.showsLineNumbers = false
+        textView.highlightSelectedLine = true
+        textView.showsLineNumbers = true
 
         textView.text = """
         

@@ -41,7 +41,8 @@ final class ViewController: NSViewController, STAnnotationsDataSource {
         defaultParagraphStyle.lineHeightMultiple = 1.2
 
         textView.defaultParagraphStyle = defaultParagraphStyle
-        textView.highlightSelectedLine = false
+        textView.highlightSelectedLine = true
+        textView.showsLineNumbers = true
 
         textView.text = """
         
