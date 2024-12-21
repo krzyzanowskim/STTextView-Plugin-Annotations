@@ -118,7 +118,7 @@ extension STAnnotationsPlugin {
                         annotationViews.append(annotationView)
                     }
                 } else {
-                    assertionFailure("No fragment for location \(annotation.location)?")
+                    logger.error("No fragment for location \(annotation.location.description)?")
                 }
             }
 
