@@ -57,17 +57,24 @@ final class ViewController: NSViewController, STAnnotationsDataSource {
         let annotation1 = try! STMessageLineAnnotation(
             id: UUID().uuidString,
             message: AttributedString(markdown: "Swift Foundation framework"),
-            kind: .info,
+            kind: .warning,
             location: textView.textLayoutManager.location(textView.textLayoutManager.documentRange.location, offsetBy: 17)!
         )
 
         let annotation2 = try! STMessageLineAnnotation(
+            id: UUID().uuidString,
+            message: AttributedString(markdown: "More infomation"),
+            kind: .info,
+            location: textView.textLayoutManager.location(textView.textLayoutManager.documentRange.location, offsetBy: 16)!
+        )
+
+        let annotation3 = try! STMessageLineAnnotation(
             id: UUID().uuidString,
             message: AttributedString(markdown: "**ERROR**: Missing \" at the end of the string literal"),
             kind: .error,
             location: textView.textLayoutManager.location(textView.textLayoutManager.documentRange.location, offsetBy: 56)!
         )
 
-        textViewAnnotations += [annotation1, annotation2]
+        textViewAnnotations += [annotation1, annotation2, annotation3]
     }
 }
