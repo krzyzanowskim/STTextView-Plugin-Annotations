@@ -32,12 +32,14 @@ public struct STAnnotationLabelView: View {
                 ZStack {
                     // the way it draws bothers me
                     // https://twitter.com/krzyzanowskim/status/1527723492002643969
-                    Image(systemName: "octagon")
-                        .symbolVariant(.fill)
-                        .foregroundStyle(.red)
+                    Group {
+                        Image(systemName: "octagon")
+                            .symbolVariant(.fill)
+                            .foregroundStyle(color).brightness(-0.4)
 
-                    Image(systemName: "xmark.octagon")
-                        .foregroundStyle(.white)
+                        Image(systemName: "xmark.octagon")
+                            .foregroundStyle(.background)
+                    }.compositingGroup()
                 }
                 .shadow(color: color, radius: 1)
             }
