@@ -6,6 +6,7 @@ import UIKit
 #endif
 
 public protocol STLineAnnotation {
-    var id: String { get }
+    typealias ID = String
+    var id: ID { get }
     var location: any NSTextLocation { get set }
 }
