@@ -1,6 +1,6 @@
 import Cocoa
 import SwiftUI
-import STTextView
+@_spi(Plugins) import STTextView
 import STAnnotationsPluginShared
 
 public class STAnnotationsPlugin: STPlugin {
