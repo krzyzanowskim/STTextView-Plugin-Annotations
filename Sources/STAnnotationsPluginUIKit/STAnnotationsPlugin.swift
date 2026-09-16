@@ -132,11 +132,7 @@ extension STAnnotationsPlugin {
             // Add views for annotations
             var annotationViews: [UIView] = []
             for annotation in annotations {
-                if textLayoutManager.textLayoutFragment(for: annotation.location) == nil {
-                    textLayoutManager.ensureLayout(for: NSTextRange(location: annotation.location))
-                }
-                if let textLayoutFragment = textLayoutManager.textLayoutFragment(for: annotation.location),
-                    let textLineFragment = textLayoutFragment.textLineFragment(at: annotation.location) {
+                if let (textLayoutFragment, textLineFragment) = textLayoutManager.annotationLineFragment(at: annotation.location) {
 
                     var lineFragmentFrame = textLayoutFragment.layoutFragmentFrame
                     lineFragmentFrame.size.height = textLineFragment.typographicBounds.height
@@ -155,6 +151,8 @@ extension STAnnotationsPlugin {
                     if let annotationView = dataSource.textView(textView, viewForLineAnnotation: annotation, textLineFragment: textLineFragment, proposedViewFrame: proposedFrame) {
                         annotationViews.append(annotationView)
                     }
+                } else {
+                    logger.error("No fragment for location \(annotation.location.description)?")
                 }
             }
 

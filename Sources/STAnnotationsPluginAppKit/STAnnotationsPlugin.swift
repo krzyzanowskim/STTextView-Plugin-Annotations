@@ -129,12 +129,8 @@ extension STAnnotationsPlugin {
 
             var annotationViews: [NSView] = []
             for annotation in annotations {
-                if textLayoutManager.textLayoutFragment(for: annotation.location) == nil {
-                    textLayoutManager.ensureLayout(for: NSTextRange(location: annotation.location))
-                }
                 // textLayoutFragment is in the textView.contentFrame coordinates
-                if let textLayoutFragment = textLayoutManager.textLayoutFragment(for: annotation.location),
-                    let textLineFragment = textLayoutFragment.textLineFragment(at: annotation.location) {
+                if let (textLayoutFragment, textLineFragment) = textLayoutManager.annotationLineFragment(at: annotation.location) {
 
                     var lineFragmentFrame = textLayoutFragment.layoutFragmentFrame
                     lineFragmentFrame.size.height = textLineFragment.typographicBounds.height
