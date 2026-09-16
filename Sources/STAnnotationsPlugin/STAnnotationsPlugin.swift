@@ -1,11 +1,9 @@
-import SwiftUI
 @_spi(Plugins) import STTextView
 
+// TextKit 2 types come from the platform framework.
 #if os(macOS)
 import AppKit
-#endif
-
-#if os(iOS) || targetEnvironment(macCatalyst)
+#else
 import UIKit
 #endif
 
@@ -14,17 +12,14 @@ public class STAnnotationsPlugin: STPlugin {
     /// Data Source
     private weak var dataSource: STAnnotationsDataSource?
 
-    /// The text view this plugin is installed in.
-    ///
-    /// Deliberately weak: the text view owns the plugin, so holding the plugin
-    /// context (or the text view) strongly - directly or by capturing it in one
-    /// of the event handlers - would form a cycle and keep both alive forever.
+    /// Weak on purpose: the text view owns the plugin, so holding it strongly -
+    /// directly, or by capturing the plugin context in an event handler - keeps
+    /// both alive forever.
     private weak var textView: STTextView?
 
-    /// Owned by the plugin. The coordinator refers back to the plugin unowned.
     private var coordinator: Coordinator?
 
-    // Annotations surface view. Add annotations to this view.
+    /// Surface the annotation views live on.
     private var annotationsContentView: STAnnotationsContentView?
 
     public init(dataSource: STAnnotationsDataSource) {
@@ -37,29 +32,15 @@ public class STAnnotationsPlugin: STPlugin {
         self.coordinator = context.coordinator
 
         let annotationsContentView = STAnnotationsContentView(frame: textView.bounds)
-#if os(macOS)
-        annotationsContentView.wantsLayer = true
-        annotationsContentView.autoresizingMask = [.height, .width]
-        textView.addSubview(annotationsContentView)
-#else
-        annotationsContentView.translatesAutoresizingMaskIntoConstraints = false
-        textView.addSubview(annotationsContentView)
-
-        NSLayoutConstraint.activate([
-            annotationsContentView.topAnchor.constraint(equalTo: textView.topAnchor),
-            annotationsContentView.leadingAnchor.constraint(equalTo: textView.leadingAnchor),
-            annotationsContentView.widthAnchor.constraint(equalTo: textView.widthAnchor),
-            annotationsContentView.heightAnchor.constraint(equalTo: textView.heightAnchor)
-        ])
-#endif
+        annotationsContentView.attach(to: textView)
         self.annotationsContentView = annotationsContentView
 
         context.events.onDidChangeText { [weak self] affectedRange, replacementString in
             self?.didChangeText(in: affectedRange, replacementString: replacementString)
         }
 
-        context.events.onDidLayoutViewport { [weak self] range in
-            self?.didLayoutViewport(range)
+        context.events.onDidLayoutViewport { [weak self] _ in
+            self?.didLayoutViewport()
         }
     }
 
@@ -76,45 +57,32 @@ public class STAnnotationsPlugin: STPlugin {
             return
         }
 
-        // Adjust annotation location based on the edit
-        // The annotation location have to update its absolut position
-        // to accomodate insert/delete change in the document, to visually
-        // stay in the same place
-        let affectedCount = textView.textContentManager.offset(from: affectedRange.location, to: affectedRange.endLocation)
-        let replacementCount = replacementString.utf16.count
-        let deltaCount = replacementCount - affectedCount
-
+        // Move the annotations with the text, so they stay on the line they
+        // annotate. The ones the edit replaced outright are pinned to the start
+        // of the edit, rather than left pointing past the end of the document.
         let textContentManager = textView.textContentManager
+        let deltaCount = replacementString.utf16.count - textContentManager.offset(from: affectedRange.location, to: affectedRange.endLocation)
+
         for var annotation in dataSource?.textViewAnnotations ?? [] {
             if textContentManager.offset(from: affectedRange.endLocation, to: annotation.location) >= 0 {
                 annotation.location = textContentManager.location(annotation.location, offsetBy: deltaCount) ?? annotation.location
             } else if textContentManager.offset(from: affectedRange.location, to: annotation.location) > 0 {
-                // The edit replaced the text this annotation pointed at. Pin it to
-                // the start of the edit instead of leaving it past the end of the
-                // document, where it has no fragment and silently comes back
-                // attached to unrelated text once the document grows again.
                 annotation.location = affectedRange.location
             }
         }
 
-        // Because annotation location position changed
-        // we need to reposition all views that may be
-        // affected by the text change
         coordinator?.layoutAnnotationViews()
     }
 
-    private func didLayoutViewport(_ range: NSTextRange?) {
-#if os(macOS)
-        // On iOS the surface view is pinned to the text view with constraints.
+    private func didLayoutViewport() {
         if let textView {
-            annotationsContentView?.frame = textView.bounds
+            annotationsContentView?.follow(textView)
         }
-#endif
         coordinator?.layoutAnnotationViews()
     }
 
     public func makeCoordinator(context: CoordinatorContext) -> Coordinator {
-        Coordinator(parent: self, context: context)
+        Coordinator(parent: self)
     }
 
     /// Lays out the views for the annotations the data source currently holds.
@@ -130,81 +98,55 @@ extension STAnnotationsPlugin {
 
     public class Coordinator {
 
-        /// The plugin owns the coordinator. Weak all the same: the coordinator is
-        /// handed out by the public makeCoordinator(context:), so a caller can
-        /// outlive the plugin and must get a no-op rather than a crash.
+        /// Weak, although the plugin owns the coordinator: makeCoordinator(context:)
+        /// is public, so a caller can outlive the plugin and has to get a no-op
+        /// rather than a crash.
         private weak var parent: STAnnotationsPlugin?
-        private weak var textView: STTextView?
 
-        init(parent: STAnnotationsPlugin, context: CoordinatorContext) {
+        init(parent: STAnnotationsPlugin) {
             self.parent = parent
-            self.textView = context.textView
         }
 
         @MainActor
         func layoutAnnotationViews() {
-            guard let parent, let dataSource = parent.dataSource, let textView else {
+            guard let parent, let dataSource = parent.dataSource, let textView = parent.textView else {
                 return
             }
 
             let textLayoutManager = textView.textLayoutManager
 
-            // Only lay out annotations the viewport covers. Anything outside it
-            // has no layout to position against, and forcing one is both slow and
-            // provisional - the frame it reports changes once the text is really
-            // laid out. The viewport already includes a prefetch band around the
-            // visible area, so a small scroll does not need a new pass.
+            // Only the annotations the viewport covers can be placed: outside it
+            // there is no layout to position against, and forcing one is both slow
+            // and provisional. The viewport carries a prefetch band already.
             let annotations = textLayoutManager.textViewportLayoutController.viewportRange.map { viewportRange in
                 dataSource.textViewAnnotations.filter { annotation in
                     viewportRange.contains(annotation.location) || viewportRange.endLocation.isSame(as: annotation.location)
                 }
             } ?? dataSource.textViewAnnotations
 
-            var annotationViews: [PlatformView] = []
-            for annotation in annotations {
-                // textLayoutFragment is in the textView.contentFrame coordinates
-                if let (textLayoutFragment, textLineFragment) = textLayoutManager.annotationLineFragment(at: annotation.location) {
-
-                    var lineFragmentFrame = textLayoutFragment.layoutFragmentFrame
-                    lineFragmentFrame.size.height = textLineFragment.typographicBounds.height
-
-                    let rightPadding: CGFloat = 24
-
-                    // Calculate proposed annotation view frame
-                    let x = textView.contentFrame.origin.x + lineFragmentFrame.maxX + 2 + rightPadding
-
-                    // The annotation runs to the trailing edge of what is on screen.
-#if os(macOS)
-                    let maxX = textView.visibleRect.maxX
-#else
-                    let maxX = textView.textInputView.frame.maxX
-#endif
-
-                    let proposedFrame = CGRect(
-                        x: x,
-                        y: textView.contentFrame.origin.y + lineFragmentFrame.origin.y + textLineFragment.typographicBounds.minY,
-                        width: maxX - x,
-                        height: lineFragmentFrame.height
-                    ).pixelAligned
-
-                    if let annotationView = dataSource.textView(textView, viewForLineAnnotation: annotation, textLineFragment: textLineFragment, proposedViewFrame: proposedFrame) {
-                        annotationViews.append(annotationView)
-                    }
-                } else {
+            let annotationViews = annotations.compactMap { annotation -> PlatformView? in
+                guard let (textLayoutFragment, textLineFragment) = textLayoutManager.annotationLineFragment(at: annotation.location) else {
                     logger.error("No fragment for location \(annotation.location.description)?")
+                    return nil
                 }
+
+                // The fragments are in textView.contentFrame coordinates.
+                var lineFragmentFrame = textLayoutFragment.layoutFragmentFrame
+                lineFragmentFrame.size.height = textLineFragment.typographicBounds.height
+
+                let rightPadding: CGFloat = 24
+                let x = textView.contentFrame.origin.x + lineFragmentFrame.maxX + 2 + rightPadding
+                let proposedFrame = CGRect(
+                    x: x,
+                    y: textView.contentFrame.origin.y + lineFragmentFrame.origin.y + textLineFragment.typographicBounds.minY,
+                    width: textView.annotationsTrailingEdge - x,
+                    height: lineFragmentFrame.height
+                ).pixelAligned
+
+                return dataSource.textView(textView, viewForLineAnnotation: annotation, textLineFragment: textLineFragment, proposedViewFrame: proposedFrame)
             }
 
-#if os(macOS)
-            parent.annotationsContentView?.subviews = annotationViews
-#else
-            for subview in parent.annotationsContentView?.subviews ?? [] {
-                subview.removeFromSuperview()
-            }
-            for view in annotationViews {
-                parent.annotationsContentView?.addSubview(view)
-            }
-#endif
+            parent.annotationsContentView?.setAnnotationViews(annotationViews)
         }
     }
 

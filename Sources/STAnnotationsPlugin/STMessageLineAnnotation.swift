@@ -1,8 +1,6 @@
 #if os(macOS)
 import AppKit
-#endif
-
-#if os(iOS) || targetEnvironment(macCatalyst)
+#else
 import UIKit
 #endif
 

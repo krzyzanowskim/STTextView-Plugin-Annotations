@@ -15,23 +15,32 @@ final class AnnotationLayoutTests: XCTestCase {
         }
     }
 
-    private func makeEditor(_ text: String, size: CGSize = CGSize(width: 600, height: 400)) -> (STTextView, DataSource, STAnnotationsPlugin) {
+    struct Editor {
+        let textView: STTextView
+        let dataSource: DataSource
+        let plugin: STAnnotationsPlugin
+        let pluginID: STPluginIdentifier
+        let window: NSWindow
+    }
+
+    private func makeEditor(_ text: String) -> Editor {
         let scrollView = STTextView.scrollableTextView()
-        scrollView.frame = CGRect(origin: .zero, size: size)
+        scrollView.frame = CGRect(x: 0, y: 0, width: 600, height: 400)
         let textView = scrollView.documentView as! STTextView
         textView.font = .monospacedSystemFont(ofSize: 14, weight: .regular)
 
         let window = NSWindow(contentRect: scrollView.frame, styleMask: [.titled], backing: .buffered, defer: false)
+        window.isReleasedWhenClosed = false
         window.contentView = scrollView
 
         let dataSource = DataSource()
         let plugin = STAnnotationsPlugin(dataSource: dataSource)
         dataSource.plugin = plugin
-        textView.addPlugin(plugin)
+        let pluginID = textView.addPlugin(plugin)
 
         textView.text = text
         textView.layoutSubtreeIfNeeded()
-        return (textView, dataSource, plugin)
+        return Editor(textView: textView, dataSource: dataSource, plugin: plugin, pluginID: pluginID, window: window)
     }
 
     private func annotationViews(in textView: STTextView) -> [NSView] {
@@ -56,9 +65,10 @@ final class AnnotationLayoutTests: XCTestCase {
     }
 
     func testAnnotationFollowsTextInsertedAbove() {
-        let (textView, dataSource, _) = makeEditor("line0\nline1\nline2\nline3\nline4")
+        let editor = makeEditor("line0\nline1\nline2\nline3\nline4")
+        let textView = editor.textView
         let annotation = annotation(at: 18, in: textView)
-        dataSource.textViewAnnotations = [annotation]
+        editor.dataSource.textViewAnnotations = [annotation]
         textView.layoutSubtreeIfNeeded()
         let before = annotationViews(in: textView).first?.frame.minY
 
@@ -70,9 +80,10 @@ final class AnnotationLayoutTests: XCTestCase {
     }
 
     func testAnnotationFollowsTextDeletedAbove() {
-        let (textView, dataSource, _) = makeEditor("line0\nline1\nline2\nline3\nline4")
+        let editor = makeEditor("line0\nline1\nline2\nline3\nline4")
+        let textView = editor.textView
         let annotation = annotation(at: 18, in: textView)
-        dataSource.textViewAnnotations = [annotation]
+        editor.dataSource.textViewAnnotations = [annotation]
         textView.layoutSubtreeIfNeeded()
 
         textView.replaceCharacters(in: NSRange(location: 0, length: 6), with: "")
@@ -82,9 +93,10 @@ final class AnnotationLayoutTests: XCTestCase {
     }
 
     func testAnnotationInsideDeletedRangeIsPinnedToTheEdit() {
-        let (textView, dataSource, _) = makeEditor("line0\nline1\nline2\nline3\nline4")
+        let editor = makeEditor("line0\nline1\nline2\nline3\nline4")
+        let textView = editor.textView
         let annotation = annotation(at: 18, in: textView)
-        dataSource.textViewAnnotations = [annotation]
+        editor.dataSource.textViewAnnotations = [annotation]
         textView.layoutSubtreeIfNeeded()
 
         // Delete the range that contains the annotation.
@@ -99,8 +111,9 @@ final class AnnotationLayoutTests: XCTestCase {
 
     func testAnnotationAtEndOfDocumentIsPlaced() {
         for text in ["line one\nline two", "line one\nline two\n"] {
-            let (textView, dataSource, _) = makeEditor(text)
-            dataSource.textViewAnnotations = [
+            let editor = makeEditor(text)
+            let textView = editor.textView
+            editor.dataSource.textViewAnnotations = [
                 STMessageLineAnnotation(id: "end", message: AttributedString("eof"), kind: .error,
                                         location: textView.textLayoutManager.documentRange.endLocation)
             ]
@@ -110,8 +123,9 @@ final class AnnotationLayoutTests: XCTestCase {
     }
 
     func testOnlyAnnotationsInsideTheViewportGetViews() {
-        let (textView, dataSource, _) = makeEditor((0..<400).map { "line \($0)" }.joined(separator: "\n"))
-        dataSource.textViewAnnotations = (0..<40).map { annotation(at: $0 * 9, in: textView, id: "a\($0)") }
+        let editor = makeEditor((0..<400).map { "line \($0)" }.joined(separator: "\n"))
+        let textView = editor.textView
+        editor.dataSource.textViewAnnotations = (0..<40).map { annotation(at: $0 * 9, in: textView, id: "a\($0)") }
         textView.layoutSubtreeIfNeeded()
 
         let views = annotationViews(in: textView)
@@ -120,23 +134,14 @@ final class AnnotationLayoutTests: XCTestCase {
     }
 
     func testRemovingThePluginRemovesItsViews() {
-        let scrollView = STTextView.scrollableTextView()
-        scrollView.frame = CGRect(x: 0, y: 0, width: 600, height: 400)
-        let textView = scrollView.documentView as! STTextView
-        let window = NSWindow(contentRect: scrollView.frame, styleMask: [.titled], backing: .buffered, defer: false)
-        window.contentView = scrollView
-
-        let dataSource = DataSource()
-        let plugin = STAnnotationsPlugin(dataSource: dataSource)
-        dataSource.plugin = plugin
-        let id = textView.addPlugin(plugin)
-        textView.text = "line one\nline two"
-        textView.layoutSubtreeIfNeeded()
-        dataSource.textViewAnnotations = [annotation(at: 3, in: textView)]
+        let editor = makeEditor("line one\nline two")
+        let textView = editor.textView
+        editor.dataSource.textViewAnnotations = [annotation(at: 3, in: textView)]
         textView.layoutSubtreeIfNeeded()
         XCTAssertEqual(annotationViews(in: textView).count, 1)
 
-        textView.removePlugin(id)
+        textView.removePlugin(editor.pluginID)
+
         XCTAssertEqual(annotationViews(in: textView).count, 0)
         XCTAssertFalse(textView.subviews.contains { String(describing: type(of: $0)).contains("STAnnotationsContentView") })
     }
@@ -145,23 +150,10 @@ final class AnnotationLayoutTests: XCTestCase {
         weak var weakTextView: STTextView?
 
         autoreleasepool {
-            let scrollView = STTextView.scrollableTextView()
-            scrollView.frame = CGRect(x: 0, y: 0, width: 600, height: 400)
-            let textView = scrollView.documentView as! STTextView
-            let window = NSWindow(contentRect: scrollView.frame, styleMask: [.titled], backing: .buffered, defer: false)
-            window.isReleasedWhenClosed = false
-            window.contentView = scrollView
-
-            let dataSource = DataSource()
-            let plugin = STAnnotationsPlugin(dataSource: dataSource)
-            dataSource.plugin = plugin
-            textView.addPlugin(plugin)
-            textView.text = "line one\nline two"
-            textView.layoutSubtreeIfNeeded()
-
-            weakTextView = textView
-            window.contentView = NSView()
-            window.orderOut(nil)
+            let editor = makeEditor("line one\nline two")
+            weakTextView = editor.textView
+            editor.window.contentView = NSView()
+            editor.window.orderOut(nil)
         }
 
         for _ in 0..<3 {

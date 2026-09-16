@@ -1,11 +1,6 @@
-import Foundation
-import STTextView
-
 #if os(macOS)
 import AppKit
-#endif
-
-#if os(iOS) || targetEnvironment(macCatalyst)
+#else
 import UIKit
 #endif
 
@@ -43,5 +38,15 @@ extension NSTextLayoutManager {
         }
 
         return (lastTextLayoutFragment, textLineFragment)
+    }
+}
+
+extension NSTextLocation {
+
+    /// Whether two locations point at the same place in the document.
+    ///
+    /// `NSTextLocation` is a protocol, so `==` is not available on existentials.
+    func isSame(as other: any NSTextLocation) -> Bool {
+        compare(other) == .orderedSame
     }
 }
