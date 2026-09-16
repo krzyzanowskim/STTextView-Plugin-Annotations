@@ -4,6 +4,9 @@ import STTextView
 
 #if os(macOS)
 import AppKit
+#else
+import UIKit
+#endif
 
 @MainActor
 final class AnnotationLayoutTests: XCTestCase {
@@ -18,20 +21,39 @@ final class AnnotationLayoutTests: XCTestCase {
     struct Editor {
         let textView: STTextView
         let dataSource: DataSource
-        let plugin: STAnnotationsPlugin
         let pluginID: STPluginIdentifier
-        let window: NSWindow
+
+        /// Takes the text view out of its window, so only the test holds it.
+        let detachFromWindow: () -> Void
     }
 
     private func makeEditor(_ text: String) -> Editor {
-        let scrollView = STTextView.scrollableTextView()
-        scrollView.frame = CGRect(x: 0, y: 0, width: 600, height: 400)
-        let textView = scrollView.documentView as! STTextView
-        textView.font = .monospacedSystemFont(ofSize: 14, weight: .regular)
+        let frame = CGRect(x: 0, y: 0, width: 600, height: 400)
 
-        let window = NSWindow(contentRect: scrollView.frame, styleMask: [.titled], backing: .buffered, defer: false)
+#if os(macOS)
+        let scrollView = STTextView.scrollableTextView()
+        scrollView.frame = frame
+        let textView = scrollView.documentView as! STTextView
+
+        let window = NSWindow(contentRect: frame, styleMask: [.titled], backing: .buffered, defer: false)
         window.isReleasedWhenClosed = false
         window.contentView = scrollView
+        let detachFromWindow = {
+            window.contentView = NSView()
+            window.orderOut(nil)
+        }
+#else
+        let textView = STTextView(frame: frame)
+        let window = UIWindow(frame: frame)
+        window.addSubview(textView)
+        window.makeKeyAndVisible()
+        let detachFromWindow = {
+            textView.removeFromSuperview()
+            window.isHidden = true
+        }
+#endif
+
+        textView.font = .monospacedSystemFont(ofSize: 14, weight: .regular)
 
         let dataSource = DataSource()
         let plugin = STAnnotationsPlugin(dataSource: dataSource)
@@ -39,14 +61,19 @@ final class AnnotationLayoutTests: XCTestCase {
         let pluginID = textView.addPlugin(plugin)
 
         textView.text = text
-        textView.layoutSubtreeIfNeeded()
-        return Editor(textView: textView, dataSource: dataSource, plugin: plugin, pluginID: pluginID, window: window)
+        textView.layoutNow()
+
+        return Editor(textView: textView, dataSource: dataSource, pluginID: pluginID, detachFromWindow: detachFromWindow)
     }
 
-    private func annotationViews(in textView: STTextView) -> [NSView] {
+    private func annotationViews(in textView: STTextView) -> [PlatformView] {
         textView.subviews
-            .filter { String(describing: type(of: $0)).contains("STAnnotationsContentView") }
+            .filter { $0 is STAnnotationsContentView }
             .flatMap(\.subviews)
+    }
+
+    private func hasAnnotationsContentView(_ textView: STTextView) -> Bool {
+        textView.subviews.contains { $0 is STAnnotationsContentView }
     }
 
     private func offset(of location: any NSTextLocation, in textView: STTextView) -> Int {
@@ -64,16 +91,18 @@ final class AnnotationLayoutTests: XCTestCase {
         )
     }
 
+    // MARK: - Following the text
+
     func testAnnotationFollowsTextInsertedAbove() {
         let editor = makeEditor("line0\nline1\nline2\nline3\nline4")
         let textView = editor.textView
         let annotation = annotation(at: 18, in: textView)
         editor.dataSource.textViewAnnotations = [annotation]
-        textView.layoutSubtreeIfNeeded()
+        textView.layoutNow()
         let before = annotationViews(in: textView).first?.frame.minY
 
         textView.replaceCharacters(in: NSRange(location: 0, length: 0), with: "inserted\n")
-        textView.layoutSubtreeIfNeeded()
+        textView.layoutNow()
 
         XCTAssertEqual(offset(of: annotation.location, in: textView), 27)
         XCTAssertGreaterThan(annotationViews(in: textView).first!.frame.minY, before!)
@@ -81,15 +110,14 @@ final class AnnotationLayoutTests: XCTestCase {
 
     func testAnnotationFollowsTextDeletedAbove() {
         let editor = makeEditor("line0\nline1\nline2\nline3\nline4")
-        let textView = editor.textView
-        let annotation = annotation(at: 18, in: textView)
+        let annotation = annotation(at: 18, in: editor.textView)
         editor.dataSource.textViewAnnotations = [annotation]
-        textView.layoutSubtreeIfNeeded()
+        editor.textView.layoutNow()
 
-        textView.replaceCharacters(in: NSRange(location: 0, length: 6), with: "")
-        textView.layoutSubtreeIfNeeded()
+        editor.textView.replaceCharacters(in: NSRange(location: 0, length: 6), with: "")
+        editor.textView.layoutNow()
 
-        XCTAssertEqual(offset(of: annotation.location, in: textView), 12)
+        XCTAssertEqual(offset(of: annotation.location, in: editor.textView), 12)
     }
 
     func testAnnotationInsideDeletedRangeIsPinnedToTheEdit() {
@@ -97,17 +125,19 @@ final class AnnotationLayoutTests: XCTestCase {
         let textView = editor.textView
         let annotation = annotation(at: 18, in: textView)
         editor.dataSource.textViewAnnotations = [annotation]
-        textView.layoutSubtreeIfNeeded()
+        textView.layoutNow()
 
         // Delete the range that contains the annotation.
         textView.replaceCharacters(in: NSRange(location: 12, length: 12), with: "")
-        textView.layoutSubtreeIfNeeded()
+        textView.layoutNow()
 
         let documentLength = offset(of: textView.textContentManager.documentRange.endLocation, in: textView)
         XCTAssertLessThanOrEqual(offset(of: annotation.location, in: textView), documentLength,
                                  "annotation location must stay inside the document")
         XCTAssertEqual(annotationViews(in: textView).count, 1, "annotation must remain visible")
     }
+
+    // MARK: - Placement
 
     func testAnnotationAtEndOfDocumentIsPlaced() {
         for text in ["line one\nline two", "line one\nline two\n"] {
@@ -117,7 +147,7 @@ final class AnnotationLayoutTests: XCTestCase {
                 STMessageLineAnnotation(id: "end", message: AttributedString("eof"), kind: .error,
                                         location: textView.textLayoutManager.documentRange.endLocation)
             ]
-            textView.layoutSubtreeIfNeeded()
+            textView.layoutNow()
             XCTAssertEqual(annotationViews(in: textView).count, 1, "no view for \(text.debugDescription)")
         }
     }
@@ -126,24 +156,26 @@ final class AnnotationLayoutTests: XCTestCase {
         let editor = makeEditor((0..<400).map { "line \($0)" }.joined(separator: "\n"))
         let textView = editor.textView
         editor.dataSource.textViewAnnotations = (0..<40).map { annotation(at: $0 * 9, in: textView, id: "a\($0)") }
-        textView.layoutSubtreeIfNeeded()
+        textView.layoutNow()
 
         let views = annotationViews(in: textView)
         XCTAssertGreaterThan(views.count, 0)
         XCTAssertLessThan(views.count, 40, "annotations outside the viewport must not be laid out")
     }
 
+    // MARK: - Lifecycle
+
     func testRemovingThePluginRemovesItsViews() {
         let editor = makeEditor("line one\nline two")
         let textView = editor.textView
         editor.dataSource.textViewAnnotations = [annotation(at: 3, in: textView)]
-        textView.layoutSubtreeIfNeeded()
+        textView.layoutNow()
         XCTAssertEqual(annotationViews(in: textView).count, 1)
 
         textView.removePlugin(editor.pluginID)
 
         XCTAssertEqual(annotationViews(in: textView).count, 0)
-        XCTAssertFalse(textView.subviews.contains { String(describing: type(of: $0)).contains("STAnnotationsContentView") })
+        XCTAssertFalse(hasAnnotationsContentView(textView))
     }
 
     func testTextViewIsReleasedWhileThePluginIsInstalled() {
@@ -152,8 +184,7 @@ final class AnnotationLayoutTests: XCTestCase {
         autoreleasepool {
             let editor = makeEditor("line one\nline two")
             weakTextView = editor.textView
-            editor.window.contentView = NSView()
-            editor.window.orderOut(nil)
+            editor.detachFromWindow()
         }
 
         for _ in 0..<3 {
@@ -163,4 +194,15 @@ final class AnnotationLayoutTests: XCTestCase {
         XCTAssertNil(weakTextView, "the plugin must not keep the text view alive")
     }
 }
+
+private extension STTextView {
+
+    /// Lays out now, so a test can read the annotation views the pass produced.
+    func layoutNow() {
+#if os(macOS)
+        layoutSubtreeIfNeeded()
+#else
+        layoutIfNeeded()
 #endif
+    }
+}

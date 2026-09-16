@@ -22,17 +22,15 @@ jobs:
           xcode-version: '26.1'
       - run: swift test --parallel
 
-  # The suite itself is macOS only so far, so this job builds the package and the
-  # test bundle for iOS and launches them on a simulator.
   test-ios:
-    name: Build iOS
+    name: Test iOS
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
       - uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: '26.1'
-      - name: Build and run the test bundle
+      - name: Test iOS
         run: |
           # Any available iOS simulator will do; names differ between runner images.
           UDID=$(xcrun simctl list devices available |
