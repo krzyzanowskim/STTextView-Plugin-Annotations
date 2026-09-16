@@ -35,6 +35,12 @@ let package = Package(
                 .product(name: "STTextView", package: "STTextView")
             ]
         ),
+        .testTarget(
+            name: "STAnnotationsPluginTests",
+            dependencies: [
+                .target(name: "STAnnotationsPlugin")
+            ]
+        ),
         .target(
             name: "STAnnotationsPluginUIKit",
             dependencies: [

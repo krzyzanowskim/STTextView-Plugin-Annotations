@@ -30,13 +30,14 @@ public class STAnnotationsPlugin: STPlugin {
         self.textView = textView
         self.coordinator = context.coordinator
 
-        let annotationsContentView = STAnnotationsContentView(frame: textView.frame)
+        let annotationsContentView = STAnnotationsContentView(frame: textView.bounds)
         annotationsContentView.translatesAutoresizingMaskIntoConstraints = false
         textView.addSubview(annotationsContentView)
         self.annotationsContentView = annotationsContentView
 
         NSLayoutConstraint.activate([
             annotationsContentView.topAnchor.constraint(equalTo: textView.topAnchor),
+            annotationsContentView.leadingAnchor.constraint(equalTo: textView.leadingAnchor),
             annotationsContentView.widthAnchor.constraint(equalTo: textView.widthAnchor),
             annotationsContentView.heightAnchor.constraint(equalTo: textView.heightAnchor)
         ])
@@ -71,8 +72,17 @@ public class STAnnotationsPlugin: STPlugin {
         let replacementCount = replacementString.utf16.count
         let deltaCount = replacementCount - affectedCount
 
-        for var annotation in dataSource?.textViewAnnotations ?? [] where textView.textContentManager.offset(from: affectedRange.endLocation, to: annotation.location) >= 0 {
-            annotation.location = textView.textContentManager.location(annotation.location, offsetBy: deltaCount) ?? annotation.location
+        let textContentManager = textView.textContentManager
+        for var annotation in dataSource?.textViewAnnotations ?? [] {
+            if textContentManager.offset(from: affectedRange.endLocation, to: annotation.location) >= 0 {
+                annotation.location = textContentManager.location(annotation.location, offsetBy: deltaCount) ?? annotation.location
+            } else if textContentManager.offset(from: affectedRange.location, to: annotation.location) > 0 {
+                // The edit replaced the text this annotation pointed at. Pin it to
+                // the start of the edit instead of leaving it past the end of the
+                // document, where it has no fragment and silently comes back
+                // attached to unrelated text once the document grows again.
+                annotation.location = affectedRange.location
+            }
         }
 
         // Because annotation location position changed
@@ -101,8 +111,10 @@ extension STAnnotationsPlugin {
 
     public class Coordinator {
 
-        /// The plugin owns the coordinator, so this never outlives its parent.
-        private unowned let parent: STAnnotationsPlugin
+        /// The plugin owns the coordinator. Weak all the same: the coordinator is
+        /// handed out by the public makeCoordinator(context:), so a caller can
+        /// outlive the plugin and must get a no-op rather than a crash.
+        private weak var parent: STAnnotationsPlugin?
         private weak var textView: STTextView?
 
         init(parent: STAnnotationsPlugin, context: CoordinatorContext) {
@@ -112,7 +124,7 @@ extension STAnnotationsPlugin {
 
         @MainActor
         func layoutAnnotationViewsIfNeeded() {
-            guard let dataSource = parent.dataSource, let textView else {
+            guard let parent, let dataSource = parent.dataSource, let textView else {
                 return
             }
 
