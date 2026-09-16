@@ -14,7 +14,7 @@ open class STMessageLineAnnotation: STLineAnnotation {
         case error
     }
 
-    open var id: String
+    public let id: String
     open var location: NSTextLocation
     public let message: AttributedString
     public let kind: AnnotationKind

@@ -22,6 +22,7 @@ public protocol STAnnotationsDataSource: AnyObject {
 
     /// Annotations.
     ///
-    /// Call `reloadData()` to notify STTextView about changes to annotations returned by this method.
+    /// Call ``STAnnotationsPlugin/reloadAnnotations()`` after changing this
+    /// property, to lay out the views for the new set of annotations.
     var textViewAnnotations: [any STLineAnnotation] { get set }
 }

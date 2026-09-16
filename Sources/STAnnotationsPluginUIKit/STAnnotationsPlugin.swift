@@ -88,22 +88,23 @@ public class STAnnotationsPlugin: STPlugin {
         // Because annotation location position changed
         // we need to reposition all views that may be
         // affected by the text change
-        coordinator?.layoutAnnotationViewsIfNeeded()
+        coordinator?.layoutAnnotationViews()
     }
 
     private func didLayoutViewport(_ range: NSTextRange?) {
-        coordinator?.layoutAnnotationViewsIfNeeded()
+        coordinator?.layoutAnnotationViews()
     }
 
     public func makeCoordinator(context: CoordinatorContext) -> Coordinator {
         Coordinator(parent: self, context: context)
     }
 
-    /// Reloads the rows and sections of the table view.
+    /// Lays out the views for the annotations the data source currently holds.
     ///
-    /// Performs the layout for annotation views.
+    /// Call this after changing ``STAnnotationsDataSource/textViewAnnotations``.
+    /// Only annotations inside the laid out viewport get a view.
     public func reloadAnnotations() {
-        coordinator?.layoutAnnotationViewsIfNeeded()
+        coordinator?.layoutAnnotationViews()
     }
 }
 
@@ -123,7 +124,7 @@ extension STAnnotationsPlugin {
         }
 
         @MainActor
-        func layoutAnnotationViewsIfNeeded() {
+        func layoutAnnotationViews() {
             guard let parent, let dataSource = parent.dataSource, let textView else {
                 return
             }

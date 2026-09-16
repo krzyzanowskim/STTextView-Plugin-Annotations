@@ -3,7 +3,7 @@ import SwiftUI
 import STTextView
 import STAnnotationsPluginShared
 
-public extension STAnnotationsDataSource where Self: AnyObject {
+public extension STAnnotationsDataSource {
 
     /// Default implementation
     func textView(_ textView: STTextView, viewForLineAnnotation lineAnnotation: any STLineAnnotation, textLineFragment: NSTextLineFragment, proposedViewFrame: CGRect) -> NSView? {

@@ -14,7 +14,7 @@ final class STAnnotationsContentView: NSView {
         true
     }
 
-    override dynamic func hitTest(_ point: NSPoint) -> NSView? {
+    override func hitTest(_ point: NSPoint) -> NSView? {
         let result = super.hitTest(point)
 
         if let view = result, view != self, view.isDescendant(of: self) {

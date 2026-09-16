@@ -5,8 +5,10 @@ import SwiftUI
 import Foundation
 import STTextView
 
+/// The annotation view the plugin draws by default: a message with a button
+/// that runs `action`, which the default data source implementation wires up to
+/// remove the annotation.
 public struct STAnnotationLabelView: View {
-    @Environment(\.colorScheme) private var colorScheme
 
     private let text: Text
     private let annotation: any STLineAnnotation
@@ -44,6 +46,7 @@ public struct STAnnotationLabelView: View {
                 .shadow(color: color, radius: 1)
             }
             .buttonStyle(.plain)
+            .accessibilityLabel(Text("Dismiss annotation"))
         }
         .labelStyle(
             AnnotationLabelStyle()
@@ -65,7 +68,6 @@ public struct STAnnotationLabelView: View {
 }
 
 private struct AnnotationLabelStyle: LabelStyle {
-    @Environment(\.colorScheme) private var colorScheme
 
     func makeBody(configuration: Configuration) -> some View {
         HStack(alignment: .center, spacing: 0) {
