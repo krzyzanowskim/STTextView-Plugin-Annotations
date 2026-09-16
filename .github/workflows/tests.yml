@@ -35,8 +35,8 @@ jobs:
       - name: Build and run the test bundle
         run: |
           # Any available iOS simulator will do; names differ between runner images.
-          UDID=$(xcrun simctl list devices available --json |
-                 jq -r '.devices | to_entries | map(select(.key | test("iOS"))) | .[].value[] | .udid' |
-                 head -1)
-          test -n "$UDID" || { echo "no iOS simulator available"; exit 1; }
+          UDID=$(xcrun simctl list devices available |
+                 awk '/^-- iOS /{ios=1; next} /^-- /{ios=0} ios && match($0, /[0-9A-F-]{36}/) {print substr($0, RSTART, RLENGTH); exit}')
+          test -n "$UDID" || { xcrun simctl list devices available; echo "no iOS simulator available"; exit 1; }
+          echo "Testing on $UDID"
           xcodebuild test -scheme STAnnotationsPluginTests -destination "id=$UDID"
