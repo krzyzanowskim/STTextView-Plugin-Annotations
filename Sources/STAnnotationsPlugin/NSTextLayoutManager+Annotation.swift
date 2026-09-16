@@ -9,7 +9,7 @@ import AppKit
 import UIKit
 #endif
 
-package extension NSTextLayoutManager {
+extension NSTextLayoutManager {
 
     /// The layout fragment and line fragment that place an annotation at `location`.
     ///

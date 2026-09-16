@@ -1,7 +1,13 @@
-import Cocoa
 import SwiftUI
 @_spi(Plugins) import STTextView
-import STAnnotationsPluginShared
+
+#if os(macOS)
+import AppKit
+#endif
+
+#if os(iOS) || targetEnvironment(macCatalyst)
+import UIKit
+#endif
 
 public class STAnnotationsPlugin: STPlugin {
 
@@ -31,9 +37,21 @@ public class STAnnotationsPlugin: STPlugin {
         self.coordinator = context.coordinator
 
         let annotationsContentView = STAnnotationsContentView(frame: textView.bounds)
+#if os(macOS)
         annotationsContentView.wantsLayer = true
         annotationsContentView.autoresizingMask = [.height, .width]
         textView.addSubview(annotationsContentView)
+#else
+        annotationsContentView.translatesAutoresizingMaskIntoConstraints = false
+        textView.addSubview(annotationsContentView)
+
+        NSLayoutConstraint.activate([
+            annotationsContentView.topAnchor.constraint(equalTo: textView.topAnchor),
+            annotationsContentView.leadingAnchor.constraint(equalTo: textView.leadingAnchor),
+            annotationsContentView.widthAnchor.constraint(equalTo: textView.widthAnchor),
+            annotationsContentView.heightAnchor.constraint(equalTo: textView.heightAnchor)
+        ])
+#endif
         self.annotationsContentView = annotationsContentView
 
         context.events.onDidChangeText { [weak self] affectedRange, replacementString in
@@ -86,9 +104,12 @@ public class STAnnotationsPlugin: STPlugin {
     }
 
     private func didLayoutViewport(_ range: NSTextRange?) {
+#if os(macOS)
+        // On iOS the surface view is pinned to the text view with constraints.
         if let textView {
             annotationsContentView?.frame = textView.bounds
         }
+#endif
         coordinator?.layoutAnnotationViews()
     }
 
@@ -139,7 +160,7 @@ extension STAnnotationsPlugin {
                 }
             } ?? dataSource.textViewAnnotations
 
-            var annotationViews: [NSView] = []
+            var annotationViews: [PlatformView] = []
             for annotation in annotations {
                 // textLayoutFragment is in the textView.contentFrame coordinates
                 if let (textLayoutFragment, textLineFragment) = textLayoutManager.annotationLineFragment(at: annotation.location) {
@@ -151,10 +172,18 @@ extension STAnnotationsPlugin {
 
                     // Calculate proposed annotation view frame
                     let x = textView.contentFrame.origin.x + lineFragmentFrame.maxX + 2 + rightPadding
+
+                    // The annotation runs to the trailing edge of what is on screen.
+#if os(macOS)
+                    let maxX = textView.visibleRect.maxX
+#else
+                    let maxX = textView.textInputView.frame.maxX
+#endif
+
                     let proposedFrame = CGRect(
                         x: x,
                         y: textView.contentFrame.origin.y + lineFragmentFrame.origin.y + textLineFragment.typographicBounds.minY,
-                        width: textView.visibleRect.maxX - x,
+                        width: maxX - x,
                         height: lineFragmentFrame.height
                     ).pixelAligned
 
@@ -166,7 +195,16 @@ extension STAnnotationsPlugin {
                 }
             }
 
+#if os(macOS)
             parent.annotationsContentView?.subviews = annotationViews
+#else
+            for subview in parent.annotationsContentView?.subviews ?? [] {
+                subview.removeFromSuperview()
+            }
+            for view in annotationViews {
+                parent.annotationsContentView?.addSubview(view)
+            }
+#endif
         }
     }
 

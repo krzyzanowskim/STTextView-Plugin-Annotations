@@ -18,20 +18,6 @@ let package = Package(
         .target(
             name: "STAnnotationsPlugin",
             dependencies: [
-                .target(name: "STAnnotationsPluginAppKit", condition: .when(platforms: [.macOS])),
-                .target(name: "STAnnotationsPluginUIKit", condition: .when(platforms: [.iOS, .macCatalyst]))
-            ]
-        ),
-        .target(
-            name: "STAnnotationsPluginShared",
-            dependencies: [
-                .product(name: "STTextView", package: "STTextView")
-            ]
-        ),
-        .target(
-            name: "STAnnotationsPluginAppKit",
-            dependencies: [
-                .target(name: "STAnnotationsPluginShared"),
                 .product(name: "STTextView", package: "STTextView")
             ]
         ),
@@ -39,13 +25,6 @@ let package = Package(
             name: "STAnnotationsPluginTests",
             dependencies: [
                 .target(name: "STAnnotationsPlugin")
-            ]
-        ),
-        .target(
-            name: "STAnnotationsPluginUIKit",
-            dependencies: [
-                .target(name: "STAnnotationsPluginShared"),
-                .product(name: "STTextView", package: "STTextView")
             ]
         )
     ]

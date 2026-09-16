@@ -13,6 +13,8 @@ import UIKit
 public protocol STAnnotationsDataSource: AnyObject {
 
     /// View for annotation.
+    ///
+    /// A default implementation is provided; implement this to draw something else.
 #if os(macOS)
     func textView(_ textView: STTextView, viewForLineAnnotation lineAnnotation: any STLineAnnotation, textLineFragment: NSTextLineFragment, proposedViewFrame: CGRect) -> NSView?
 #endif

@@ -3,7 +3,6 @@ import UIKit
 
 import STTextView
 import STAnnotationsPlugin
-import STAnnotationsPluginShared
 
 class ViewController: UIViewController, STAnnotationsDataSource {
 

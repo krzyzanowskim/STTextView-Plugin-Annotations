@@ -11,7 +11,7 @@ public protocol STLineAnnotation {
     var location: any NSTextLocation { get set }
 }
 
-package extension NSTextLocation {
+extension NSTextLocation {
 
     /// Whether two locations point at the same place in the document.
     ///
