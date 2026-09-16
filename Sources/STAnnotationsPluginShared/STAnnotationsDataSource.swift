@@ -9,6 +9,7 @@ import AppKit
 import UIKit
 #endif
 
+@MainActor
 public protocol STAnnotationsDataSource: AnyObject {
 
     /// View for annotation.

@@ -10,3 +10,13 @@ public protocol STLineAnnotation {
     var id: ID { get }
     var location: any NSTextLocation { get set }
 }
+
+package extension NSTextLocation {
+
+    /// Whether two locations point at the same place in the document.
+    ///
+    /// `NSTextLocation` is a protocol, so `==` is not available on existentials.
+    func isSame(as other: any NSTextLocation) -> Bool {
+        compare(other) == .orderedSame
+    }
+}

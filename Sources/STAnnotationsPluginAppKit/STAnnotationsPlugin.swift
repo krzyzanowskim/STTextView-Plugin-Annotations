@@ -114,14 +114,24 @@ extension STAnnotationsPlugin {
                 return
             }
 
-            let annotations = dataSource.textViewAnnotations
-
-            // Add views for annotations
             let textLayoutManager = textView.textLayoutManager
+
+            // Only lay out annotations the viewport covers. Anything outside it
+            // has no layout to position against, and forcing one is both slow and
+            // provisional - the frame it reports changes once the text is really
+            // laid out. The viewport already includes a prefetch band around the
+            // visible area, so a small scroll does not need a new pass.
+            let annotations = textLayoutManager.textViewportLayoutController.viewportRange.map { viewportRange in
+                dataSource.textViewAnnotations.filter { annotation in
+                    viewportRange.contains(annotation.location) || viewportRange.endLocation.isSame(as: annotation.location)
+                }
+            } ?? dataSource.textViewAnnotations
 
             var annotationViews: [NSView] = []
             for annotation in annotations {
-                textLayoutManager.ensureLayout(for: NSTextRange(location: annotation.location))
+                if textLayoutManager.textLayoutFragment(for: annotation.location) == nil {
+                    textLayoutManager.ensureLayout(for: NSTextRange(location: annotation.location))
+                }
                 // textLayoutFragment is in the textView.contentFrame coordinates
                 if let textLayoutFragment = textLayoutManager.textLayoutFragment(for: annotation.location),
                     let textLineFragment = textLayoutFragment.textLineFragment(at: annotation.location) {
