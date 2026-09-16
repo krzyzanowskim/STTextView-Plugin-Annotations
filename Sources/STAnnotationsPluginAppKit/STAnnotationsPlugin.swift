@@ -80,13 +80,8 @@ extension STAnnotationsPlugin {
 
     public class Coordinator {
 
-        class State {
-            var lastAnnotationIDs: Set<STLineAnnotation.ID> = []
-        }
-
         private let parent: STAnnotationsPlugin
         private let context: CoordinatorContext
-        private var state: State = State()
 
         init(parent: STAnnotationsPlugin, context: CoordinatorContext) {
             self.context = context
@@ -100,13 +95,6 @@ extension STAnnotationsPlugin {
             }
 
             let annotations = dataSource.textViewAnnotations
-
-            if state.lastAnnotationIDs == Set(annotations.map(\.id)) {
-                // skip if annotations did not change
-                return
-            }
-
-            state.lastAnnotationIDs = Set(annotations.map(\.id))
 
             // Add views for annotations
             let textLayoutManager = context.textView.textLayoutManager
