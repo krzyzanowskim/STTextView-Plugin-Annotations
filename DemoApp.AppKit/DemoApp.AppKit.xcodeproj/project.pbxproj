@@ -361,7 +361,7 @@
 			repositoryURL = "https://github.com/krzyzanowskim/STTextView";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.8.10;
+				minimumVersion = 2.4.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
